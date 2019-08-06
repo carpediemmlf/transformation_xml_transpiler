@@ -1,0 +1,9 @@
+strict digraph G {
+  www_google_com [ label="http://www.google.com" ];
+  www_wikipedia_org [ label="http://www.wikipedia.org" ];
+  www_jgrapht_org [ label="http://www.jgrapht.org" ];
+  www_jgrapht_org -> www_wikipedia_org;
+  www_google_com -> www_jgrapht_org;
+  www_google_com -> www_wikipedia_org;
+  www_wikipedia_org -> www_google_com;
+}
