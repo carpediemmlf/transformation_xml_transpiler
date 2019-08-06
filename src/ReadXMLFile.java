@@ -16,45 +16,77 @@ public class ReadXMLFile {
 
     public static Map getVertices(String fileName) throws ParserConfigurationException, IOException, SAXException {
 
-            Map<String, String> myMap = new HashMap<String, String>();
+        Map<String, String> myMap = new HashMap<String, String>();
 
-            // Read in file located at same level as the root of the project folder.
-            File fXmlFile = new File(fileName);
+        // Read in file located at same level as the root of the project folder.
+        File fXmlFile = new File(fileName);
 
-            // Build DOM Document. Throws ParserConfigurationException.
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        // Build DOM Document. Throws ParserConfigurationException.
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-            // Throws IOException and SAXException.
-            Document doc = dBuilder.parse(fXmlFile);
+        // Throws IOException and SAXException.
+        Document doc = dBuilder.parse(fXmlFile);
 
-            //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-            doc.getDocumentElement().normalize();
+        //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+        doc.getDocumentElement().normalize();
 
-            // System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+        // System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 
-            NodeList nList = doc.getElementsByTagName("node");
+        NodeList nList = doc.getElementsByTagName("node");
 
-            // System.out.println("----------------------------");
+        // System.out.println("----------------------------");
 
-            for (int temp = 0; temp < nList.getLength(); temp++) {
+        for (int temp = 0; temp < nList.getLength(); temp++) {
 
-                Node nNode = nList.item(temp);
+            Node nNode = nList.item(temp);
 
 
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
-                    Element eElement = (Element) nNode;
+                Element eElement = (Element) nNode;
 
-                    // System.out.println("Node : " + eElement.getAttribute("componentName"));
-                    if (nNode.hasChildNodes()) {
+                // System.out.println("Node : " + eElement.getAttribute("componentName"));
+                if (nNode.hasChildNodes()) {
 
-                        myMap.put(eElement.getChildNodes().item(1).getAttributes().getNamedItem("value").getNodeValue(), eElement.getAttribute("componentName").toString());
-                    }
+                    myMap.put(eElement.getChildNodes().item(1).getAttributes().getNamedItem("value").getNodeValue(), eElement.getAttribute("componentName").toString());
                 }
             }
-            // System.out.println((myMap));
+        }
+        // System.out.println((myMap));
 
-            return myMap;
+        return myMap;
+    }
+
+    public static Map getEdges(String fileName) throws ParserConfigurationException, IOException, SAXException {
+        Map<String, List<String>> myMap2 = new HashMap<>();
+        List<String> link = new ArrayList<>();
+        // Read in file located at same level as the root of the project folder.
+        File fXmlFile = new File(fileName);
+
+        // Build DOM Document. Throws ParserConfigurationException.
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+
+        // Throws IOException and SAXException.
+        Document doc = dBuilder.parse(fXmlFile);
+
+        //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+        doc.getDocumentElement().normalize();
+        NodeList linkList = doc.getElementsByTagName("connection");
+        for (int a = 0; a < linkList.getLength(); a++) {
+            Node linkNode = linkList.item(a);
+            if (linkNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element linkElement = (Element) linkNode;
+                System.out.println("Connection: " + linkElement.getAttribute("label"));
+                link.add(linkElement.getAttribute("connectorName"));
+                link.add(linkElement.getAttribute("source"));
+                link.add(linkElement.getAttribute("target"));
+                myMap2.put(linkElement.getAttribute("label"), link);
+
+
+            }
+            
+        }return myMap2;
     }
 }
