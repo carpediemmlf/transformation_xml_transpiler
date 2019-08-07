@@ -1,0 +1,34 @@
+<step>
+    <name>Sort rows</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+        <method>none</method>
+        <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+        <input>
+        </input>
+        <output>
+        </output>
+    </remotesteps>
+    <GUI>
+        <xloc>128</xloc>
+        <yloc>352</yloc>
+        <draw>Y</draw>
+    </GUI>
+</step>
