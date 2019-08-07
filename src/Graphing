@@ -23,8 +23,8 @@ public final class Graphing
         Graph<String, DefaultEdge> a = new SimpleGraph<>(DefaultEdge.class);
         ReadXMLFile b= new ReadXMLFile();
 
-        List joe= b.getVertices("C:\\Users\\prasaha\\Documents\\talend.item");
-        for ( Object element : joe) {
+        List nodes= b.getVertices("C:\\Users\\prasaha\\Documents\\talend.item");
+        for ( Object element : nodes) {
             a.addVertex(element.toString());
         }
 
@@ -36,28 +36,5 @@ public final class Graphing
         System.out.println(a);
 
 
-
-        // note undirected edges are printed as: {<v1>,<v2>}
-        System.out.println("-- toString output");
-       // System.out.println(stringGraph.toString());
-        System.out.println();
-
-
-        // create a graph based on URI objects
-        Graph<URI, DefaultEdge> hrefGraph = createHrefGraph();
-
-        // find the vertex corresponding to www.jgrapht.org
-        URI start = hrefGraph
-                .vertexSet().stream().filter(uri -> uri.getHost().equals("www.jgrapht.org")).findAny()
-                .get();
-
-
-        // perform a graph traversal starting from that vertex
-        System.out.println("-- traverseHrefGraph output");
-        traverseHrefGraph(hrefGraph, start);
-        System.out.println();
-
-        System.out.println("-- renderHrefGraph output");
-        renderHrefGraph(hrefGraph);
-        System.out.println();
+    }
     }
