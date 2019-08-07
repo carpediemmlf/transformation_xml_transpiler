@@ -1,5 +1,6 @@
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
+import org.jgrapht.generate.*;
 import org.jgrapht.io.*;
 import org.jgrapht.traverse.*;
 import org.xml.sax.SAXException;
@@ -8,15 +9,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
+import java.net.MalformedURLException;
 
 public final class Graphing
 {
-    private Graphing()
-    {
-    } 
+    private Graphing() {}
 
-   
     public static void main(String[] args)
             throws URISyntaxException,
             ExportException, IOException, SAXException, ParserConfigurationException {
@@ -28,12 +26,34 @@ public final class Graphing
             a.addVertex(element.toString());
         }
 
+        ComponentNameProvider<URI> vertexIdProvider = new ComponentNameProvider<URI>()
+        {
+            public String getName(URI uri)
+            {
+                return uri.getHost().replace('.', '_');
+            }
+        };
+        ComponentNameProvider<URI> vertexLabelProvider = new ComponentNameProvider<URI>()
+        {
+            public String getName(URI uri)
+            {
+                return uri.toString();
+            }
+        };
 
-        Map mo= b.getEdges("C:\\Users\\prasaha\\Documents\\talend.item");
-        String people = joe.toString();
-        String x=b.getEdges("C:\\Users\\prasaha\\Documents\\talend.item").toString();
+        GraphExporter<URI, DefaultEdge> exporter =
+                new DOTExporter<>(vertexIdProvider, vertexLabelProvider, null);
 
-        System.out.println(a);
+
+        Writer writer = new StringWriter();
+        exporter.exportGraph(a, writer);
+        System.out.println(writer.toString());
+
+        // Write to a .dot file.
+        String fileName = "trish_visualization.dot";
+        Mapping.writeStringToNewFile(writer.toString(), fileName);
+
+        // -----------------------------------------------
 
 
     }
