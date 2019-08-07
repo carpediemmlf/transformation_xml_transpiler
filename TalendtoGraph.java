@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 
-public  class Grapher {
+public  class TalendtoGraph {
     public static Graph<String, DefaultEdge> makeGraph(String fileName) {
 
         Graph<String, DefaultEdge> a = new SimpleGraph<>(DefaultEdge.class);
@@ -36,11 +36,11 @@ public  class Grapher {
         }
 
 return a;
-    
-}
-    
 
-            
+}
+
+
+
     public static void printGraph (Graph a){
         Iterator<String> iter = new DepthFirstIterator<>(a);
         while (iter.hasNext()) {
@@ -51,6 +51,17 @@ return a;
         }
 
     }
+
+}
+
+
+
+
+
+
+
+
+
 
 }
 
