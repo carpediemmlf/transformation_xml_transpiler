@@ -1,0 +1,63 @@
+import org.jgrapht.*;
+import org.jgrapht.graph.*;
+import org.jgrapht.io.*;
+import org.jgrapht.traverse.*;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+
+public final class Graphing
+{
+    private Graphing()
+    {
+    } 
+
+   
+    public static void main(String[] args)
+            throws URISyntaxException,
+            ExportException, IOException, SAXException, ParserConfigurationException {
+        Graph<String, DefaultEdge> a = new SimpleGraph<>(DefaultEdge.class);
+        ReadXMLFile b= new ReadXMLFile();
+
+        List joe= b.getVertices("C:\\Users\\prasaha\\Documents\\talend.item");
+        for ( Object element : joe) {
+            a.addVertex(element.toString());
+        }
+
+
+        Map mo= b.getEdges("C:\\Users\\prasaha\\Documents\\talend.item");
+        String people = joe.toString();
+        String x=b.getEdges("C:\\Users\\prasaha\\Documents\\talend.item").toString();
+
+        System.out.println(a);
+
+
+
+        // note undirected edges are printed as: {<v1>,<v2>}
+        System.out.println("-- toString output");
+       // System.out.println(stringGraph.toString());
+        System.out.println();
+
+
+        // create a graph based on URI objects
+        Graph<URI, DefaultEdge> hrefGraph = createHrefGraph();
+
+        // find the vertex corresponding to www.jgrapht.org
+        URI start = hrefGraph
+                .vertexSet().stream().filter(uri -> uri.getHost().equals("www.jgrapht.org")).findAny()
+                .get();
+
+
+        // perform a graph traversal starting from that vertex
+        System.out.println("-- traverseHrefGraph output");
+        traverseHrefGraph(hrefGraph, start);
+        System.out.println();
+
+        System.out.println("-- renderHrefGraph output");
+        renderHrefGraph(hrefGraph);
+        System.out.println();
+    }
