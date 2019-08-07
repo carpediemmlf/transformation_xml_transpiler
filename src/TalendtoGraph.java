@@ -3,6 +3,7 @@ import org.jgrapht.graph.*;
 import org.jgrapht.io.*;
 import org.jgrapht.traverse.*;
 import org.jgrapht.util.SupplierUtil;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,9 +36,11 @@ public  class TalendtoGraph {
             e.printStackTrace();
         }
 
-return a;
+        return a;
 
-}
+    }
+
+
 
 
 
