@@ -13,19 +13,16 @@ import java.util.*;
 import java.net.MalformedURLException;
 
 public class Main {
-    public static void main  (String [] args) throws URISyntaxException, ExportException, IOException, ParserConfigurationException, SAXException {
+    public static void main  (String [] args)
+            throws URISyntaxException, ExportException, IOException, ParserConfigurationException, SAXException {
 
         // --------------------------------------------
         // Parser practice = new Parser();
-
         // practice.printTesting();
         // ---------------------------------------------
 
-
-        /*
-
         // create a graph based on URI objects
-        Graph<URI, DefaultEdge> hrefGraph = createHrefGraph();
+        Graph<URI, DefaultEdge> hrefGraph = Mapping.createHrefGraph();
 
         // ----------------------------------------------
         // use helper classes to define how vertices should be rendered,
@@ -53,39 +50,15 @@ public class Main {
 
         // Write to a .dot file.
         String fileName = "exampleGraphviz.dot";
-        writeToNewFile(writer.toString(), fileName);
+        Mapping.writeStringToNewFile(writer.toString(), fileName);
 
         // -----------------------------------------------
 
-
-
-         */
-
-
-
-        ReadXMLFile.test("talend_input_output.item");
+        Map<String, String> vertices = ReadXMLFile.getVertices("talend_input_output.item");
+        System.out.println(vertices);
     }
 
-    private static Graph<URI, DefaultEdge> createHrefGraph() throws URISyntaxException {
-        Graph<URI, DefaultEdge> g = new DefaultDirectedGraph(DefaultEdge.class);
-        URI google = new URI("http://www.google.com");
-        URI wikipedia = new URI("http://www.wikipedia.org");
-        URI jgrapht = new URI("http://www.jgrapht.org");
-        g.addVertex(google);
-        g.addVertex(wikipedia);
-        g.addVertex(jgrapht);
-        g.addEdge(jgrapht, wikipedia);
-        g.addEdge(google, jgrapht);
-        g.addEdge(google, wikipedia);
-        g.addEdge(wikipedia, google);
-        return g;
-    }
 
-    private static void writeToNewFile(String str, String fileName)
-            throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
-        writer.write(str);
 
-        writer.close();
-    }
+
 }
