@@ -40,6 +40,22 @@ public class WriteXMLFile {
             document = builderT.parse(inputStream);
             translatedDoc = builderP.parse(inputStreamPenTemplate);
 
+            for (PentNode v: graph.vertexSet()){
+                switch (v.getType()){
+                    case "CsvInput":
+                        addStep_inputCSV(v);
+                        break;
+                    case "TextFileOutput":
+                        addStep_outputText(v);
+                        break;
+                }
+            }
+
+            for (DefaultEdge e: graph.edgeSet()){
+                addHop(graph.getEdgeSource(e).getName(),graph.getEdgeTarget(e).getName());
+            }
+
+
         } catch (FileNotFoundException notFound){
             System.out.println("File wasn't found");
         } catch (IOException IoE){
@@ -82,13 +98,19 @@ public class WriteXMLFile {
         return documentI;
     }
 
-    public void addStep_inputCSV (){
+    public void addStep_inputCSV (PentNode v){
         try {
             Document documentI = getTemplateStepDoc("csvInputStep");
 
             // // Add info into step
 //            System.out.println(documentI.getFirstChild().getChildNodes().item(1).getTextContent());
-            documentI.getFirstChild().getChildNodes().item(1).setTextContent(getStepInfo(0).get(0));
+            documentI.getFirstChild().getChildNodes().item(1).setTextContent(v.getName());
+
+/*
+            documentI.getFirstChild().getChildNodes().item(1).setTextContent(getStepInfo(0).get(0));    // to take straight from talend
+
+*/
+
 //            System.out.println(documentI.getFirstChild().getChildNodes().item(1).getTextContent());
             /*for (int i =0; i < documentI.getChildNodes().item(0).getChildNodes().getLength();i++){
              *//*if ((StepInfo.get(h)).equals(translatedDoc.getChildNodes().item(0).getChildNodes().item(i).getNodeName())){
@@ -96,6 +118,8 @@ public class WriteXMLFile {
                 }*//*
                 System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(i).getNodeName());
             }*/
+
+
 
             // // Insert Step into main template
             Node stepNode = translatedDoc.importNode(documentI.getFirstChild(), true);
@@ -110,13 +134,19 @@ public class WriteXMLFile {
         //writeXML();
     }
 
-    public void addStep_outputText (){
+    public void addStep_outputText (PentNode v){
         try {
             Document documentI = getTemplateStepDoc("textOutputStep");
 
             // // Add info into step
 //            System.out.println(documentI.getFirstChild().getChildNodes().item(1).getTextContent());
-            documentI.getFirstChild().getChildNodes().item(1).setTextContent(getStepInfo(1).get(0));
+            documentI.getFirstChild().getChildNodes().item(1).setTextContent(v.getName());
+/*
+
+            documentI.getFirstChild().getChildNodes().item(1).setTextContent(getStepInfo(1).get(0));    // to take straight from talend
+
+*/
+
 //            System.out.println(documentI.getFirstChild().getChildNodes().item(1).getTextContent());
 
             // // Insert Step into main template
