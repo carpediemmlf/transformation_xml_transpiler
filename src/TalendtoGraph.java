@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 
-public  class Grapher {
+public class Grapher {
     public static Graph<String, DefaultEdge> makeGraph(String fileName) {
 
         Graph<String, DefaultEdge> a = new SimpleGraph<>(DefaultEdge.class);
