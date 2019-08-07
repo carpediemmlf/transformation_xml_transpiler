@@ -21,10 +21,15 @@ public class Main {
         // practice.printTesting();
         // ---------------------------------------------
 
+
+        /*
         // create a graph based on URI objects
         Graph<URI, DefaultEdge> hrefGraph = Mapping.createHrefGraph();
 
         // ----------------------------------------------
+
+
+         */
         // use helper classes to define how vertices should be rendered,
         // adhering to the DOT language restrictions
         ComponentNameProvider<URI> vertexIdProvider = new ComponentNameProvider<URI>()
@@ -44,6 +49,8 @@ public class Main {
 
         GraphExporter<URI, DefaultEdge> exporter =
                 new DOTExporter<>(vertexIdProvider, vertexLabelProvider, null);
+
+
         Writer writer = new StringWriter();
         exporter.exportGraph(hrefGraph, writer);
         System.out.println(writer.toString());
@@ -54,7 +61,6 @@ public class Main {
 
         // -----------------------------------------------
 
-        Map<String, String> vertices = ReadXMLFile.getVertices("talend_input_output.item");
         System.out.println(vertices);
     }
 
