@@ -1,4 +1,3 @@
-
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.generate.*;
@@ -22,49 +21,6 @@ public class Main {
         // ---------------------------------------------
 
 
-        /*
-        // create a graph based on URI objects
-        Graph<URI, DefaultEdge> hrefGraph = Mapping.createHrefGraph();
 
-        // ----------------------------------------------
-
-
-         */
-        // use helper classes to define how vertices should be rendered,
-        // adhering to the DOT language restrictions
-        ComponentNameProvider<URI> vertexIdProvider = new ComponentNameProvider<URI>()
-        {
-            public String getName(URI uri)
-            {
-                return uri.getHost().replace('.', '_');
-            }
-        };
-        ComponentNameProvider<URI> vertexLabelProvider = new ComponentNameProvider<URI>()
-        {
-            public String getName(URI uri)
-            {
-                return uri.toString();
-            }
-        };
-
-        GraphExporter<URI, DefaultEdge> exporter =
-                new DOTExporter<>(vertexIdProvider, vertexLabelProvider, null);
-
-
-        Writer writer = new StringWriter();
-        exporter.exportGraph(hrefGraph, writer);
-        System.out.println(writer.toString());
-
-        // Write to a .dot file.
-        String fileName = "exampleGraphviz.dot";
-        Mapping.writeStringToNewFile(writer.toString(), fileName);
-
-        // -----------------------------------------------
-
-        System.out.println(vertices);
     }
-
-
-
-
 }

@@ -17,11 +17,6 @@ public class ReadXMLFile {
    public static List getVertices(String fileName) throws ParserConfigurationException, IOException, SAXException {
         List myList = new ArrayList();
 
-
-        //Map<String, String> myMap = new HashMap<String, String>();
-
-
-
         // Read in file located at same level as the root of the project folder.
 
         File fXmlFile = new File(fileName);
@@ -31,8 +26,6 @@ public class ReadXMLFile {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
-
 
         // Throws IOException and SAXException.
 

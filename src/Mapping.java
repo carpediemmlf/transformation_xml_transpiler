@@ -48,6 +48,7 @@ public class Mapping {
 
         @Override
         public boolean add(String s) {
+
             return false;
         }
 
@@ -257,8 +258,50 @@ public class Mapping {
             return null;
         }
     };
-    // Testing assistance methods.
+    // Testing assistance methods
 
+
+    /*
+        // create a graph based on URI objects
+        Graph<URI, DefaultEdge> hrefGraph = Mapping.createHrefGraph();
+
+        // ----------------------------------------------
+
+
+    */
+    // use helper classes to define how vertices should be rendered,
+    // adhering to the DOT language restrictions
+    ComponentNameProvider<URI> vertexIdProvider = new ComponentNameProvider<URI>()
+    {
+        public String getName(URI uri)
+        {
+            return uri.getHost().replace('.', '_');
+        }
+    };
+    ComponentNameProvider<URI> vertexLabelProvider = new ComponentNameProvider<URI>()
+    {
+        public String getName(URI uri)
+        {
+            return uri.toString();
+        }
+    };
+
+    /*
+    GraphExporter<URI, DefaultEdge> exporter =
+            new DOTExporter<>(vertexIdProvider, vertexLabelProvider, null);
+
+
+    Writer writer = new StringWriter();
+        exporter.exportGraph(hrefGraph, writer);
+        System.out.println(writer.toString());
+
+    // Write to a .dot file.
+    String fileName = "exampleGraphviz.dot";
+        Mapping.writeStringToNewFile(writer.toString(), fileName);
+    // -----------------------------------------------
+        System.out.println(vertices);
+
+     */
     public static void writeStringToNewFile(String str, String fileName)
             throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
