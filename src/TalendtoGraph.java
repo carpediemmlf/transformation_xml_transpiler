@@ -3,6 +3,7 @@ import org.jgrapht.graph.*;
 import org.jgrapht.io.*;
 import org.jgrapht.traverse.*;
 import org.jgrapht.util.SupplierUtil;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,7 +13,8 @@ import java.util.*;
 import java.util.function.Supplier;
 
 
-public class Grapher {
+
+public  class TalendtoGraph {
     public static Graph<String, DefaultEdge> makeGraph(String fileName) {
 
         Graph<String, DefaultEdge> a = new SimpleGraph<>(DefaultEdge.class);
@@ -35,12 +37,14 @@ public class Grapher {
             e.printStackTrace();
         }
 
-return a;
-    
-}
-    
+        return a;
 
-            
+    }
+
+
+
+
+
     public static void printGraph (Graph a){
         Iterator<String> iter = new DepthFirstIterator<>(a);
         while (iter.hasNext()) {
@@ -53,6 +57,17 @@ return a;
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

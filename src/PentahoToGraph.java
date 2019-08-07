@@ -2,7 +2,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -94,5 +93,9 @@ public class PentahoToGraph {
                 System.out.println("Nodes not found in graph");
             }
         }
+    }
+
+    public Graph<PentNode, DefaultEdge> getGraph(){
+        return graph;
     }
 }
