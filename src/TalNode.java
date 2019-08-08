@@ -63,7 +63,7 @@ public class TalNode {
 
 
 
-    /* public String getDescription() {
+     public String getDescription() {
 
         return description;
 
