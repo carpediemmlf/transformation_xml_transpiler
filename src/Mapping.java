@@ -260,53 +260,71 @@ public class Mapping {
     };
     // Testing assistance methods
 
-
-    /*
-        // create a graph based on URI objects
-        Graph<URI, DefaultEdge> hrefGraph = Mapping.createHrefGraph();
-
-        // ----------------------------------------------
-
-
-    */
     // use helper classes to define how vertices should be rendered,
     // adhering to the DOT language restrictions
-    ComponentNameProvider<URI> vertexIdProvider = new ComponentNameProvider<URI>()
-    {
-        public String getName(URI uri)
-        {
-            return uri.getHost().replace('.', '_');
+
+    public void pentToDot(Graph<PentNode, DefaultEdge> pentGraph, String fileName) {
+        ComponentNameProvider<PentNode> vertexIdProvider = new ComponentNameProvider<PentNode>() {
+            public String getName(PentNode pentNode) {
+                return pentNode.getName();
+            }
+        };
+        ComponentNameProvider<PentNode> vertexLabelProvider = new ComponentNameProvider<PentNode>() {
+            public String getName(PentNode pentNode) {
+                return pentNode.getType();
+            }
+        };
+
+        GraphExporter<PentNode, DefaultEdge> exporter =
+                new DOTExporter<PentNode, DefaultEdge>(vertexIdProvider, vertexLabelProvider, null);
+
+        Writer writer = new StringWriter();
+        try {
+            // writeStringToNewFile("", fileName);
+            // FileWriter fw = null;
+            // File file = new File(fileName);
+            // fw = new FileWriter(fileName);
+            exporter.exportGraph(pentGraph, writer);
+            writeStringToNewFile(writer.toString(), fileName);
+
+        } catch (IOException | ExportException e) {
+            e.printStackTrace();
         }
-    };
-    ComponentNameProvider<URI> vertexLabelProvider = new ComponentNameProvider<URI>()
-    {
-        public String getName(URI uri)
-        {
-            return uri.toString();
+    }
+
+    public void talToDot(Graph<TalNode, DefaultEdge> talGraph, String fileName) {
+        ComponentNameProvider<TalNode> vertexIdProvider = new ComponentNameProvider<TalNode>() {
+            public String getName(TalNode talNode) {
+                return talNode.getName();
+            }
+        };
+        ComponentNameProvider<TalNode> vertexLabelProvider = new ComponentNameProvider<TalNode>() {
+            public String getName(TalNode pentNode) {
+                return pentNode.getType();
+            }
+        };
+
+        GraphExporter<TalNode, DefaultEdge> exporter =
+                new DOTExporter<TalNode, DefaultEdge>(vertexIdProvider, vertexLabelProvider, null);
+
+        Writer writer = new StringWriter();
+        try {
+            // writeStringToNewFile("", fileName);
+            // FileWriter fw = null;
+            // File file = new File(fileName);
+            // fw = new FileWriter(fileName);
+            exporter.exportGraph(talGraph, writer);
+            writeStringToNewFile(writer.toString(), fileName);
+
+        } catch (IOException | ExportException e) {
+            e.printStackTrace();
         }
-    };
+    }
 
-    /*
-    GraphExporter<URI, DefaultEdge> exporter =
-            new DOTExporter<>(vertexIdProvider, vertexLabelProvider, null);
-
-
-    Writer writer = new StringWriter();
-        exporter.exportGraph(hrefGraph, writer);
-        System.out.println(writer.toString());
-
-    // Write to a .dot file.
-    String fileName = "exampleGraphviz.dot";
-        Mapping.writeStringToNewFile(writer.toString(), fileName);
-    // -----------------------------------------------
-        System.out.println(vertices);
-
-     */
     public static void writeStringToNewFile(String str, String fileName)
             throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
         writer.write(str);
-
         writer.close();
     }
 
