@@ -5,21 +5,12 @@ public class TalNode {
     private String yLoc;
     private HashMap<String,String> simpleInfo = new HashMap<>();
 
-
-
     protected TalNode (String name, String type){
-
         this.name=name;
-
         this.type=type;
-
         simpleInfo.put("name",name);
-
         simpleInfo.put("type",type);
-
     }
-
-
 
     @Override
 
@@ -28,7 +19,6 @@ public class TalNode {
         return name;
 
     }
-
 
 
     // Getters
