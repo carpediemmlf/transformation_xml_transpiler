@@ -23,7 +23,7 @@ public class TalToGraph {
 
         try {
             // setting up documents to read from and write to, as xml document objects
-            InputStream inputStream = new FileInputStream(new File("talendXML\\" + talendXMLName)); //PROBLEM: when path is translated.xml, graph is NOT drawn
+            InputStream inputStream = new FileInputStream(new File(talendXMLName)); //PROBLEM: when path is translated.xml, graph is NOT drawn
 
             DocumentBuilderFactory Tfactory = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder Tbuilder = Tfactory.newDocumentBuilder();
@@ -55,8 +55,8 @@ public class TalToGraph {
         for (int i = 0; i < vertices.getLength(); i++){
             // call method, passing through xml step, and takes in the data
             String vertexName = vertices.item(i).getChildNodes().item(1).getAttributes().getNamedItem("value").getNodeValue();
-            String vertexType = vertices.item(i).getChildNodes().item(3).getTextContent();
-//            System.out.println(vertexName + "  "+ vertexType);
+            String vertexType = vertices.item(i).getChildNodes().item(1).getAttributes().getNamedItem("value").getNodeValue();
+            // System.out.println(vertexName + "  "+ vertexType);
 
             TalNode vertex = new TalNode();
             vertex.setName(vertexName);
@@ -94,8 +94,9 @@ public class TalToGraph {
                 while (vertexIterator.hasNext()) {
                     TalNode vertex = (TalNode) vertexIterator.next();
                     if (vertex.getName().equals(sourceName)) {
-                        System.out.println("vertex: " + vertex.getName());
-                        System.out.println("source: " + sourceName);
+                        // System.out.println("vertex: " + vertex.getName());
+                        // System.out.println("source: " + sourceName);
+                        // System.out.println("target: " + targetName);
                         source = vertex;
                     }
                     if (vertex.getName().equals(targetName)) {
@@ -110,8 +111,6 @@ public class TalToGraph {
             }
         }
     }
-
-
     public Graph<TalNode, DefaultEdge> getGraph(){
         return graph;
     }
