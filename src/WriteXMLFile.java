@@ -41,6 +41,10 @@ public class WriteXMLFile {
             translatedDoc = builderP.parse(inputStreamPenTemplate);
 
             for (PentNode v: graph.vertexSet()){
+                addStep(v);
+            }
+
+            /*for (PentNode v: graph.vertexSet()){
                 switch (v.getType()){
                     case "CsvInput":
                         addStep_inputCSV(v);
@@ -49,7 +53,7 @@ public class WriteXMLFile {
                         addStep_outputText(v);
                         break;
                 }
-            }
+            }*/
 
             for (DefaultEdge e: graph.edgeSet()){
                 addHop(graph.getEdgeSource(e).getName(),graph.getEdgeTarget(e).getName());
@@ -164,6 +168,53 @@ public class WriteXMLFile {
         //writeXML();
     }
 
+    public void addStep (PentNode v){
+        try {
+            Document documentI = null;
+            switch (v.getType()){
+                case "CsvInput":
+                    documentI = getTemplateStepDoc("csvInputStep");
+                    break;
+                case "TextFileOutput":
+                    documentI = getTemplateStepDoc("textOutputStep");
+                    break;
+            }
+
+            NodeList nodes = documentI.getFirstChild().getChildNodes();
+            for (int i =0; i < nodes.getLength();i++){
+//                System.out.println(nodes.item(i).getNodeName());
+                String variable = nodes.item(i).getNodeName();
+//                System.out.println(nodes.item(i).getChildNodes().getLength());
+                if (nodes.item(i).getNodeType()!=3){                        // getting rid of text nodes
+                    if (nodes.item(i).getChildNodes().getLength() <= 1) {
+                        System.out.println(nodes.item(i).getNodeName());
+                        System.out.println("yes");
+                        if (v.getSimpleInfo().containsKey(variable)) {
+                            System.out.println("  IN IF WHICH CONTAINS INFO");
+                            nodes.item(i).setTextContent(v.getSimpleInfo().get(variable));
+                        }
+                    }
+                    else{
+//                        System.out.println("no");
+                    }
+                }
+                /*try{
+                    nodes.item(i).setTextContent(v.ge);
+                }catch(NullPointerException dataNotThere){
+                    System.out.println("Data doesn't exist");
+                }*/
+
+            }
+
+
+
+
+        } catch (Exception TemplateNotFound){
+            System.out.println(TemplateNotFound.getMessage());
+        }
+
+    }
+
     public void addHop (String source, String target){
         try {
             Document documentI = getTemplateStepDoc("hopTemplate");
@@ -180,7 +231,7 @@ public class WriteXMLFile {
         } catch (Exception TemplateNotFound){
             System.out.println(TemplateNotFound.getMessage());
         }
-        writeXML();
+//        writeXML();
     }
 
     //
