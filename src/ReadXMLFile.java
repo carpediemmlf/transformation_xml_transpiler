@@ -58,7 +58,6 @@ public class ReadXMLFile {
         // System.out.println((myMap));
 
         return myList;
-
     }
 
     public static Map getEdges(String fileName) throws ParserConfigurationException, IOException, SAXException {

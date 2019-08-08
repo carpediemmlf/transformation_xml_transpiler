@@ -21,9 +21,8 @@ public class PentahoToGraph {
 
         try {
             // setting up documents to read from and write to, as xml document objects
-//            InputStream inputStream = new FileInputStream(new File("pentaho_input_output.ktr")); //PROBLEM: when path is translated.xml, graph is NOT drawn
-            InputStream inputStream = new FileInputStream(new File("pentahoXML\\" + filename)); //PROBLEM: when path is translated.xml, graph is NOT drawn
-
+            // InputStream inputStream = new FileInputStream(new File("pentaho_input_output.ktr")); //PROBLEM: when path is translated.xml, graph is NOT drawn
+            InputStream inputStream = new FileInputStream(new File(filename)); //PROBLEM: when path is translated.xml, graph is NOT drawn
 
             DocumentBuilderFactory Pfactory = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder Pbuilder = Pfactory.newDocumentBuilder();
@@ -56,7 +55,7 @@ public class PentahoToGraph {
             // call method, passing through xml step, and takes in the data
             String vertexName = vertices.item(i).getChildNodes().item(1).getTextContent();
             String vertexType = vertices.item(i).getChildNodes().item(3).getTextContent();
-//            System.out.println(vertexName + "  "+ vertexType);
+            // System.out.println(vertexName + "  "+ vertexType);
 
             PentNode vertex = new PentNode();
             vertex.setName(vertexName);

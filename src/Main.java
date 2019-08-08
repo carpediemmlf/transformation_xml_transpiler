@@ -15,12 +15,20 @@ public class Main {
     public static void main  (String [] args)
             throws URISyntaxException, ExportException, IOException, ParserConfigurationException, SAXException {
 
-        // --------------------------------------------
-        // Parser practice = new Parser();
-        // practice.printTesting();
-        // ---------------------------------------------
+        TalToGraph talGrapher = new TalToGraph("..//talend_input_output.item");
+        Graph<TalNode, DefaultEdge> trialTalGraph = talGrapher.getGraph();
+        // trialPentGraph.toString();
+        Mapping mapperTal = new Mapping();
+        mapperTal.talToDot(trialTalGraph, "talDot.dot");
 
+        // -------------------
 
+        PentahoToGraph pentGrapher = new PentahoToGraph("..//pentaho_input_output.ktr");
+        Graph<PentNode, DefaultEdge> trialPentGraph = pentGrapher.getGraph();
+        // trialPentGraph.toString();
+        Mapping mapperPent = new Mapping();
+        mapperPent.pentToDot(trialPentGraph, "pentDot.dot");
 
+        // System.out.println(new Mapping().pentToDot(trialPentGraph, "pentDot.dot"));
     }
 }
