@@ -17,11 +17,13 @@ public class PentahoToGraph {
     private Document document;
     Graph<PentNode, DefaultEdge> graph;
 
-    public PentahoToGraph(){
+    public PentahoToGraph(String filename){
 
         try {
             // setting up documents to read from and write to, as xml document objects
-            InputStream inputStream = new FileInputStream(new File("pentaho_input_output.ktr")); //PROBLEM: when path is translated.xml, graph is NOT drawn
+//            InputStream inputStream = new FileInputStream(new File("pentaho_input_output.ktr")); //PROBLEM: when path is translated.xml, graph is NOT drawn
+            InputStream inputStream = new FileInputStream(new File("PentahoTemplates\\" + filename)); //PROBLEM: when path is translated.xml, graph is NOT drawn
+
 
             DocumentBuilderFactory Pfactory = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder Pbuilder = Pfactory.newDocumentBuilder();
