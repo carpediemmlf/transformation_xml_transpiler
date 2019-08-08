@@ -1,0 +1,11 @@
+digraph G {
+  Select_values [ label="SelectValues" ];
+  Filter_rows [ label="FilterRows" ];
+  Sort_rows [ label="SortRows" ];
+  Group_by [ label="GroupBy" ];
+  Merge_join [ label="MergeJoin" ];
+  Sort_rows -> Select_values;
+  Select_values -> Filter_rows;
+  Filter_rows -> Group_by;
+  Group_by -> Merge_join;
+}

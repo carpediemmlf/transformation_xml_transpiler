@@ -266,12 +266,12 @@ public class Mapping {
     public void pentToDot(Graph<PentNode, DefaultEdge> pentGraph, String fileName) {
         ComponentNameProvider<PentNode> vertexIdProvider = new ComponentNameProvider<PentNode>() {
             public String getName(PentNode pentNode) {
-                return pentNode.getName();
+                return pentNode.getName().replaceAll(" ", "_");
             }
         };
         ComponentNameProvider<PentNode> vertexLabelProvider = new ComponentNameProvider<PentNode>() {
             public String getName(PentNode pentNode) {
-                return pentNode.getType();
+                return pentNode.getType().replaceAll(" ", "_");
             }
         };
 
@@ -295,12 +295,12 @@ public class Mapping {
     public void talToDot(Graph<TalNode, DefaultEdge> talGraph, String fileName) {
         ComponentNameProvider<TalNode> vertexIdProvider = new ComponentNameProvider<TalNode>() {
             public String getName(TalNode talNode) {
-                return talNode.getName();
+                return talNode.getName().replaceAll(" ", "_"); // .toLowerCase()
             }
         };
         ComponentNameProvider<TalNode> vertexLabelProvider = new ComponentNameProvider<TalNode>() {
             public String getName(TalNode pentNode) {
-                return pentNode.getType();
+                return pentNode.getType().replaceAll(" ", "_");
             }
         };
 
