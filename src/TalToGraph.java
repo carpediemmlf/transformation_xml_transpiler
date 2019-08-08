@@ -19,11 +19,11 @@ public class TalToGraph {
     private Document document;
     Graph<TalNode, DefaultEdge> graph;
 
-    public TalToGraph(){
+    public TalToGraph(String talendXMLName){
 
         try {
             // setting up documents to read from and write to, as xml document objects
-            InputStream inputStream = new FileInputStream(new File("talend_input_output.item")); //PROBLEM: when path is translated.xml, graph is NOT drawn
+            InputStream inputStream = new FileInputStream(new File("talendXML\\" + talendXMLName)); //PROBLEM: when path is translated.xml, graph is NOT drawn
 
             DocumentBuilderFactory Tfactory = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder Tbuilder = Tfactory.newDocumentBuilder();
