@@ -55,7 +55,7 @@ public class TalToGraph {
         for (int i = 0; i < vertices.getLength(); i++){
             // call method, passing through xml step, and takes in the data
             String vertexName = vertices.item(i).getChildNodes().item(1).getAttributes().getNamedItem("value").getNodeValue();
-            String vertexType = vertices.item(i).getChildNodes().item(1).getAttributes().getNamedItem("value").getNodeValue();
+            String vertexType = vertices.item(i).getAttributes().getNamedItem("componentName").getNodeValue();
             // System.out.println(vertexName + "  "+ vertexType);
 
             TalNode vertex = new TalNode();
