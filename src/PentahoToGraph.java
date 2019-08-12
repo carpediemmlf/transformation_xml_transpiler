@@ -90,7 +90,8 @@ public class PentahoToGraph {
                     ((GroupByNode) vertex).addAggregateField("Dummy Agrregate", "Dummy subject", "dummy type");
                     break;
                 case "FilterRows":
-                    vertex = new PentNode(vertexName, vertexType);
+                    vertex = new FilterNode(vertexName, vertexType);
+                    ((FilterNode) vertex).addCondition("Y","Field 1", "<", "Field 2");
                     break;
                 default:
                     vertex = new PentNode(vertexName,vertexType);

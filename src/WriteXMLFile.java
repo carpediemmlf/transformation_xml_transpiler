@@ -309,6 +309,19 @@ public class WriteXMLFile {
                     break;
                 case "FilterRows":
                     documentI = getTemplateStepDoc("filterRowsStep");
+                    for (FilterNode.Condition c : ((FilterNode) vertex).getConditons()){
+                        Document conditionDoc = getTemplateStepDoc("FilterRowsConditionTemplate");
+                        for (int i = 0; i<conditionDoc.getFirstChild().getChildNodes().getLength(); i++){
+                            String variable = conditionDoc.getFirstChild().getChildNodes().item(i).getNodeName();
+                            if (c.getConditionInfo().containsKey(variable)) {
+                                conditionDoc.getFirstChild().getChildNodes().item(i).setTextContent((c.getConditionInfo().get(variable)));
+                            }
+                        }
+                        Node inputNode = documentI.importNode(conditionDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(19));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(19);
+                        refNode.appendChild(inputNode);
+                    }
                     break;
             }
 
