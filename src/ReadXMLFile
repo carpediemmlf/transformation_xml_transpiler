@@ -15,62 +15,104 @@ import java.util.stream.Stream;
 
 public class ReadXMLFile {
 
-   public  HashMap getVertices(String fileName) throws ParserConfigurationException, IOException, SAXException {
-       //List myList = new ArrayList();
-       HashMap myHashMap=new HashMap();
+    private HashMap <String, String> myHashMap;
 
 
-       //Map<String, String> myMap = new HashMap<String, String>();
+    public HashMap getVertices(String fileName) throws ParserConfigurationException, IOException, SAXException {
+        myHashMap = new LinkedHashMap();
+        //childHashMap=new LinkedHashMap<>();
+
+        // Read in file located at same level as the root of the project folder.
+
+        File fXmlFile = new File(fileName);
+
+        // Build DOM Document. Throws ParserConfigurationException.
+
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
 
-       // Read in file located at same level as the root of the project folder.
+        // Throws IOException and SAXException.
 
-       File fXmlFile = new File(fileName);
+        Document doc = dBuilder.parse(fXmlFile);
 
-       // Build DOM Document. Throws ParserConfigurationException.
+        //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 
-       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        doc.getDocumentElement().normalize();
 
-       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        NodeList nList = doc.getElementsByTagName("node");
+        // System.out.println("----------------------------");
+        for (int temp = 0; temp < nList.getLength(); temp++) {
+            Node nNode = nList.item(temp);
+            HashMap map=new LinkedHashMap();
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement = (Element) nNode;
 
+                System.out.println("Node : " + eElement.getAttribute("componentName"));
 
-       // Throws IOException and SAXException.
-
-       Document doc = dBuilder.parse(fXmlFile);
-
-       //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-
-       doc.getDocumentElement().normalize();
-
-       NodeList nList = doc.getElementsByTagName("node");
-       // System.out.println("----------------------------");
-       for (int temp = 0; temp < nList.getLength(); temp++) {
-           Node nNode = nList.item(temp);
-           if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-               Element eElement = (Element) nNode;
-
-               System.out.println("Node : " + eElement.getAttribute("componentName"));
-
-               for (int a = 1; a < nNode.getChildNodes().getLength(); a++) {
-                   if ((nNode.getChildNodes().item(a).getNodeType() == 1)) {
-                       Node childNode=nNode.getChildNodes().item(a);
+                for (int a = 1; a < nNode.getChildNodes().getLength(); a++) {
+                   // HashMap<String, String> hashMap=new LinkedHashMap<>();
+                    if ((nNode.getChildNodes().item(a).getNodeType() == 1)) {
+                        Node childNode = nNode.getChildNodes().item(a);
 
 
-                           String key = nNode.getChildNodes().item(a).getAttributes().getNamedItem("name").toString().replaceAll("name=","");
-                           Node value = nNode.getChildNodes().item(a).getAttributes().getNamedItem("value");
-                           if (key != null && value != null) {
-                               myHashMap.put(key, value);
 
-                           }
+                        String key = nNode.getChildNodes().item(a).getAttributes().item(1).toString().replaceAll("name=", "");
+                        Node value = nNode.getChildNodes().item(a).getAttributes().getNamedItem("value");
+                        if (key != null && value != null) {
+                           map.put(key, value.toString().replaceAll("value=", ""));
+                            // System.out.println(value.toString().replaceAll("value=", ""));
 
-                   }
-               }
 
-           }
-       }
-       return myHashMap;
+                        }
+                        if(childNode.hasChildNodes()&& Node.ELEMENT_NODE==nNode.getNodeType()) {
+                            HashMap childHashMap =new LinkedHashMap();
+                            for (int b = 0; b < childNode.getChildNodes().getLength(); b++) {
 
-       }
+
+                                if (childNode.getChildNodes().item(b).hasAttributes()) {
+
+
+                                    String key2 = childNode.getChildNodes().item(b).getAttributes().item(0).toString().replaceAll("elementRef=", "");
+                                    String value2 = childNode.getChildNodes().item(b).getAttributes().item(1).toString().replaceAll("value=", "");
+                                    if (key2 != null && value2 != null) {
+                                        childHashMap.put(key2, value2);
+
+                                    }
+                                }
+                            }
+                            System.out.println(childHashMap);
+                        }
+
+                    }
+
+                    }System.out.println(map);
+
+                }
+            //System.out.println(hashMap);
+
+
+            }
+
+
+
+        return myHashMap;
+
+    }
+
+    public  String  getKey(String key) {
+        return (String) myHashMap.get(key);
+        /*
+        for (Object strKey : myHashMap.keySet()) {
+            if (strKey.equals("PRINT_HEADER")) {
+                System.out.println("Key : " + myHashMap.get(strKey));
+            } else {
+                System.out.println("no key specified");
+            }
+        }
+         */
+    }
 
 
 
