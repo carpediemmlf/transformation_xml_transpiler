@@ -1,5 +1,5 @@
 <step>
-    <name>Merge join</name>
+    <name></name>
     <type>MergeJoin</type>
     <description/>
     <distribute>Y</distribute>
@@ -9,7 +9,7 @@
         <method>none</method>
         <schema_name/>
     </partitioning>
-    <join_type>INNER</join_type>
+    <join_type></join_type>
     <step1/>
     <step2/>
     <keys_1>

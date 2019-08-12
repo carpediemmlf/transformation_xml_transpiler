@@ -1,5 +1,5 @@
 <step>
-    <name>Filter rows</name>
+    <name></name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -12,12 +12,6 @@
     <send_true_to/>
     <send_false_to/>
     <compare>
-        <condition>
-            <negated>N</negated>
-            <leftvalue/>
-            <function>=</function>
-            <rightvalue/>
-        </condition>
     </compare>
     <attributes/>
     <cluster_schema/>

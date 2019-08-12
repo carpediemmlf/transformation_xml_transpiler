@@ -1,6 +1,6 @@
 <field>
-    <aggregate>Total Transport Emissions</aggregate>
-    <subject>Transport Total</subject>
-    <type>SUM</type>
+    <aggregate></aggregate>
+    <subject></subject>
+    <type></type>
     <valuefield/>
 </field>

@@ -9,7 +9,7 @@
         <method>none</method>
         <schema_name/>
     </partitioning>
-    <filename>C:\Users\Administrator\Documents\Sprint2-XMLTransformations\EmissionsData.csv</filename>
+    <filename></filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -24,17 +24,6 @@
     <format>mixed</format>
     <encoding/>
     <fields>
-        <field>
-            <name>Region Name</name>
-            <type>String</type>
-            <format/>
-            <currency>$</currency>
-            <decimal>.</decimal>
-            <group>,</group>
-            <length>24</length>
-            <precision>-1</precision>
-            <trim_type>none</trim_type>
-        </field>
     </fields>
     <attributes/>
     <cluster_schema/>

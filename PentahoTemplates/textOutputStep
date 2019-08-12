@@ -1,5 +1,5 @@
 <step>
-    <name>CSVOutput</name>
+    <name></name>
     <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -40,18 +40,6 @@
         <splitevery/>
     </file>
     <fields>
-        <field>
-            <name>Region Name</name>
-            <type>String</type>
-            <format/>
-            <currency/>
-            <decimal/>
-            <group/>
-            <nullif/>
-            <trim_type>none</trim_type>
-            <length>24</length>
-            <precision>-1</precision>
-        </field>
     </fields>
     <attributes/>
     <cluster_schema/>

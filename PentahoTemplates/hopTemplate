@@ -1,5 +1,5 @@
 <hop>
-    <from>CSVInput</from>
-    <to>CSVOutput</to>
+    <from></from>
+    <to></to>
     <enabled>Y</enabled>
 </hop>

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GroupByNode extends PentNode {
 
@@ -19,6 +20,10 @@ public class GroupByNode extends PentNode {
     }
 
     // getters
+    public ArrayList<String> getFieldsToGroupBy() {
+        return fieldsToGroupBy;
+    }
+
     public ArrayList<GroupByField> getFields() {
         return fields;
     }
@@ -31,10 +36,15 @@ public class GroupByNode extends PentNode {
         private String type;
         private String valuefield;
 
+        HashMap<String, String > groupByFieldInfo = new HashMap<>();
+
         public GroupByField (String aggregate, String subject, String type){
             this.aggregate = aggregate;
             this.subject = subject;
             this.type = type;
+            groupByFieldInfo.put("aggregate",aggregate);
+            groupByFieldInfo.put("subject", subject);
+            groupByFieldInfo.put("type", type);
         }
 
         // getters
@@ -48,6 +58,10 @@ public class GroupByNode extends PentNode {
 
         public String getType() {
             return type;
+        }
+
+        public HashMap<String, String> getGroupByFieldInfo() {
+            return groupByFieldInfo;
         }
     }
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SelectValuesNode extends PentNode {
 
@@ -23,10 +24,13 @@ public class SelectValuesNode extends PentNode {
 
         private String name;
         private String rename;
+        HashMap<String, String> fieldInfo = new HashMap<>();
 
         public SelectValuesField (String name, String rename){
             this.name = name;
             this.rename = rename;
+            fieldInfo.put("name", name);
+            fieldInfo.put("rename", rename);
         }
 
         public String getName() {
@@ -35,6 +39,10 @@ public class SelectValuesNode extends PentNode {
 
         public String getRename() {
             return rename;
+        }
+
+        public HashMap<String, String> getFieldInfo() {
+            return fieldInfo;
         }
     }
 }
