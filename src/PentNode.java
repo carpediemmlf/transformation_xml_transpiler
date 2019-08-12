@@ -78,25 +78,9 @@ public class PentNode {
 
     public void setyLoc(String yLoc) { this.yLoc = yLoc; }
 
-    public void setDescription(String description) {
-        simpleInfo.put("description",description);
-    }
-
-    public void setFilename(String filename) {
-        simpleInfo.put("filename",filename);
-    }
-
-    public void setSeparator(String separator) {
-        simpleInfo.put("separator",separator);
-    }
-
-    public void setEnclosure(String enclosure) {
-        simpleInfo.put("enclosure",enclosure);
-    }
-
-    public void addSimpleInfo (String infoName, String data){
-        simpleInfo.put(infoName,data);
-    }
+//    public void addSimpleInfo (String infoName, String data){
+//        simpleInfo.put(infoName,data);
+//    }
 
    /* public void setFields (ArrayList<String> fields){
         simpleInfo.put("fields",fields);

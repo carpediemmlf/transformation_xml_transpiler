@@ -58,12 +58,49 @@ public class PentahoToGraph {
             String vertexType = vertices.item(i).getChildNodes().item(3).getTextContent();
 //            System.out.println(vertexName + "  "+ vertexType);
 
-            PentNode vertex = new PentNode(vertexName, vertexType);
-            /*PentNode vertex = new PentNode();
+            /*PentNode vertex = new PentNode(vertexName, vertexType);
+            *//*PentNode vertex = new PentNode();
             vertex.setName(vertexName);
             vertex.setType(vertexType);*/
 
+            PentNode vertex = null;
+            switch (vertexType){
+                case "CsvInput":
+                    vertex = new CSVInputNode(vertexName, vertexType,"DUMMY: filename");
+                    ((CSVInputNode) vertex).addField("Field 1");
+                    break;
+                case "TextFileOutput":
+                    vertex = new TextOutputNode(vertexName, vertexType, "filename55");
+                    ((TextOutputNode) vertex).addField("Out field");
+                    break;
+                case "SelectValues":
+                    vertex = new SelectValuesNode(vertexName, vertexType);
+                    ((SelectValuesNode) vertex).addField("Field 1", "Field One");
+                    break;
+                case "SortRows":
+                    vertex = new SortNode(vertexName, vertexType);
+                    ((SortNode) vertex).addField("Field 2", "Y", "N");
+                    break;
+                case "MergeJoin":
+                    vertex = new MergeNode(vertexName, vertexType, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
+                    break;
+                case "GroupBy":
+                    vertex = new GroupByNode(vertexName, vertexType);
+                    ((GroupByNode) vertex).addFieldToGroupBy("Dummy field1");
+                    ((GroupByNode) vertex).addAggregateField("Dummy Agrregate", "Dummy subject", "dummy type");
+                    break;
+                case "FilterRows":
+                    vertex = new PentNode(vertexName, vertexType);
+                    break;
+                default:
+                    vertex = new PentNode(vertexName,vertexType);
+            }
+
             graph.addVertex(vertex);
+
+/*
+            graph.addVertex(vertex);
+*/
         }
     }
 

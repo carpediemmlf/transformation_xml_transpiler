@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class WriteXMLFile {
 
     private Graph<PentNode, DefaultEdge> graph;
-    private Document document;
     private Document translatedDoc;
 
     public WriteXMLFile(Graph<PentNode, DefaultEdge> graph) {
@@ -29,35 +28,26 @@ public class WriteXMLFile {
 
         try {
             // setting up documents to read from and write to, as xml document objects
-            InputStream inputStream = new FileInputStream(new File("talend_input_output.item"));
+//            InputStream inputStream = new FileInputStream(new File("talend_input_output.item"));
             InputStream inputStreamPenTemplate = new FileInputStream("PentahoTemplates\\EmptyTransformation.ktr");
 
-            DocumentBuilderFactory factoryT = DocumentBuilderFactory.newDefaultInstance();
-            DocumentBuilder builderT = factoryT.newDocumentBuilder();
             DocumentBuilderFactory factoryP = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builderP = factoryP.newDocumentBuilder();
 
-            document = builderT.parse(inputStream);
+//            document = builderT.parse(inputStream);
             translatedDoc = builderP.parse(inputStreamPenTemplate);
 
             for (PentNode v: graph.vertexSet()){
+                System.out.println("#####################################################################################");
+                System.out.println("#######################################         NEW NODE");
                 addStep(v);
             }
-
-            /*for (PentNode v: graph.vertexSet()){
-                switch (v.getType()){
-                    case "CsvInput":
-                        addStep_inputCSV(v);
-                        break;
-                    case "TextFileOutput":
-                        addStep_outputText(v);
-                        break;
-                }
-            }*/
 
             for (DefaultEdge e: graph.edgeSet()){
                 addHop(graph.getEdgeSource(e).getName(),graph.getEdgeTarget(e).getName());
             }
+
+            writeXML();
 
 
         } catch (FileNotFoundException notFound){
@@ -168,36 +158,184 @@ public class WriteXMLFile {
         //writeXML();
     }
 
-    public void addStep (PentNode v){
+    public void addStep (PentNode vertex){
         try {
             Document documentI = null;
-            switch (v.getType()){
+            System.out.println(vertex.getType());
+            switch (vertex.getType()){
                 case "CsvInput":
                     documentI = getTemplateStepDoc("csvInputStep");
+                    for (CSVInputNode.CSVInputField f : ((CSVInputNode) vertex).getFields()){
+                        Document fieldDoc = getTemplateStepDoc("InputFieldTemplate");
+                        for (int i = 0; i<fieldDoc.getFirstChild().getChildNodes().getLength(); i++){
+                            String variable = fieldDoc.getFirstChild().getChildNodes().item(i).getNodeName();
+                            if (f.getFieldInfo().containsKey(variable)) {
+                                fieldDoc.getFirstChild().getChildNodes().item(i).setTextContent((f.getFieldInfo().get(variable)));
+                            }
+                        }
+//                        System.out.println(fieldDoc.getFirstChild().getChildNodes().item(1).getNodeName());
+//                        fieldDoc.getFirstChild().getChildNodes().item(1).setTextContent(f.getName());
+
+                        Node inputNode = documentI.importNode(fieldDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(43));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(43);
+                        refNode.appendChild(inputNode);
+                    }
                     break;
                 case "TextFileOutput":
                     documentI = getTemplateStepDoc("textOutputStep");
+
+                    NodeList fileNodes = documentI.getElementsByTagName("file").item(0).getChildNodes();
+                    for (int i = 0; i< fileNodes.getLength() ;i++){
+                        String variable = documentI.getFirstChild().getChildNodes().item(i).getNodeName();
+                        if (((TextOutputNode)vertex).getFileInfo().containsKey(variable)){
+                            fileNodes.item(i).setTextContent(((TextOutputNode) vertex).getFileInfo().get(variable));
+                        }
+                    }
+                    for (TextOutputNode.TextOutputField f : ((TextOutputNode) vertex).getFields()){
+                        Document fieldDoc = getTemplateStepDoc("textOutputFieldTemplate");
+                        for (int i = 0; i<fieldDoc.getFirstChild().getChildNodes().getLength(); i++){
+                            String variable = fieldDoc.getFirstChild().getChildNodes().item(i).getNodeName();
+                            if (f.getFieldInfo().containsKey(variable)) {
+                                fieldDoc.getFirstChild().getChildNodes().item(i).setTextContent((f.getFieldInfo().get(variable)));
+                            }
+                        }
+                        Node inputNode = documentI.importNode(fieldDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(43));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(43);
+                        refNode.appendChild(inputNode);
+                    }
+
+                    break;
+                case "SelectValues":
+                    documentI = getTemplateStepDoc("selectValuesStep");
+                    for (SelectValuesNode.SelectValuesField f : ((SelectValuesNode) vertex).getFields()){
+                        Document fieldDoc = getTemplateStepDoc("SelectValuesFieldTemplate");
+
+                        for (int i = 0; i<fieldDoc.getFirstChild().getChildNodes().getLength(); i++){
+                            String variable = fieldDoc.getFirstChild().getChildNodes().item(i).getNodeName();
+                            if (f.getFieldInfo().containsKey(variable)) {
+                                fieldDoc.getFirstChild().getChildNodes().item(i).setTextContent((f.getFieldInfo().get(variable)));
+                            }
+                        }
+
+//                        System.out.println(fieldDoc.getFirstChild().getChildNodes().item(3).getNodeName());
+/*                        fieldDoc.getFirstChild().getChildNodes().item(1).setTextContent(f.getName());
+                        fieldDoc.getFirstChild().getChildNodes().item(3).setTextContent(f.getRename());*/
+
+                        Node stepNode = documentI.importNode(fieldDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(15));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(15);
+                        refNode.appendChild(stepNode);
+                    }
+                    break;
+                case "SortRows":
+                    documentI = getTemplateStepDoc("sortStep");
+                    for (SortNode.SortField f : ((SortNode) vertex).getFields()){
+                        Document fieldDoc = getTemplateStepDoc("SortFieldTemplate");
+//                        System.out.println(fieldDoc.getFirstChild().getChildNodes().item(1).getNodeName());
+
+                        for (int i = 0; i<fieldDoc.getFirstChild().getChildNodes().getLength(); i++){
+                            String variable = fieldDoc.getFirstChild().getChildNodes().item(i).getNodeName();
+                            if (f.getFieldInfo().containsKey(variable)) {
+                                fieldDoc.getFirstChild().getChildNodes().item(i).setTextContent((f.getFieldInfo().get(variable)));
+                            }
+                        }
+                        /*fieldDoc.getFirstChild().getChildNodes().item(1).setTextContent(f.getName());
+                        fieldDoc.getFirstChild().getChildNodes().item(3).setTextContent(f.getAscending());
+                        fieldDoc.getFirstChild().getChildNodes().item(5).setTextContent(f.getCase_sensitive());*/
+
+                        Node stepNode = documentI.importNode(fieldDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(29));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(29);
+                        refNode.appendChild(stepNode);
+                    }
+                    break;
+                case "MergeJoin":
+                    documentI = getTemplateStepDoc("mergeStep");
+                    /*System.out.println(documentI.getFirstChild().getChildNodes().item(15).getNodeName());
+                    System.out.println(documentI.getFirstChild().getChildNodes().item(17).getNodeName());*/
+                    MergeNode v = (MergeNode) vertex;
+                    /*documentI.getFirstChild().getChildNodes().item(15).setTextContent(v.getJoin_type());
+                    documentI.getFirstChild().getChildNodes().item(17).setTextContent(v.getStep1());
+                    documentI.getFirstChild().getChildNodes().item(19).setTextContent(v.getStep2());*/
+                    for (String keyVal : v.getKey_1()){
+                        Document keyDoc = getTemplateStepDoc("MergeKeyTemplate1");
+                        keyDoc.getFirstChild().setTextContent(keyVal);
+                        Node stepNode = documentI.importNode(keyDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(21));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(21);
+                        refNode.appendChild(stepNode);
+                    }
+                    for (String keyVal : v.getKey_1()){
+                        Document keyDoc = getTemplateStepDoc("MergeKeyTemplate1");
+                        keyDoc.getFirstChild().setTextContent(keyVal);
+                        Node stepNode = documentI.importNode(keyDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(23));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(23);
+                        refNode.appendChild(stepNode);
+                    }
+                    /*documentI.getFirstChild().getChildNodes().item(21).appendChild(key1);
+                    documentI.getFirstChild().getChildNodes().item(21).appendChild(key1);*/
+
+                    break;
+                case "GroupBy":
+                    documentI = getTemplateStepDoc("groupStep");
+                    for (String f : ((GroupByNode) vertex).getFieldsToGroupBy()){
+                        Document groupDoc = getTemplateStepDoc("GroupByGroupTemplate");
+//                        System.out.println(groupDoc.getFirstChild().getChildNodes().item(1).getNodeName());
+                        groupDoc.getFirstChild().getChildNodes().item(1).setTextContent(f);
+
+                        Node inputNode = documentI.importNode(groupDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(31));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(31);
+                        refNode.appendChild(inputNode);
+
+                    }
+                    for (GroupByNode.GroupByField f : ((GroupByNode) vertex).getFields()){
+                        Document fieldDoc = getTemplateStepDoc("GroupByFieldTemplate");
+                        for (int i = 0; i<fieldDoc.getFirstChild().getChildNodes().getLength(); i++){
+                            String variable = fieldDoc.getFirstChild().getChildNodes().item(i).getNodeName();
+                            if (f.getGroupByFieldInfo().containsKey(variable)) {
+                                fieldDoc.getFirstChild().getChildNodes().item(i).setTextContent((f.getGroupByFieldInfo().get(variable)));
+                            }
+                        }
+                        Node inputNode = documentI.importNode(fieldDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(31));
+                        Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(33);
+                        refNode.appendChild(inputNode);
+                    }
+
+                    break;
+                case "FilterRows":
+                    documentI = getTemplateStepDoc("filterRowsStep");
                     break;
             }
 
             NodeList nodes = documentI.getFirstChild().getChildNodes();
             for (int i =0; i < nodes.getLength();i++){
+
 //                System.out.println(nodes.item(i).getNodeName());
                 String variable = nodes.item(i).getNodeName();
 //                System.out.println(nodes.item(i).getChildNodes().getLength());
                 if (nodes.item(i).getNodeType()!=3){                        // getting rid of text nodes
                     if (nodes.item(i).getChildNodes().getLength() <= 1) {
-                        System.out.println(nodes.item(i).getNodeName());
-                        System.out.println("yes");
-                        if (v.getSimpleInfo().containsKey(variable)) {
+
+                        /*System.out.println(nodes.item(i).getNodeName());
+                        System.out.println("yes");*/
+                        if (vertex.getSimpleInfo().containsKey(variable)) {
                             System.out.println("  IN IF WHICH CONTAINS INFO");
-                            nodes.item(i).setTextContent(v.getSimpleInfo().get(variable));
+                            nodes.item(i).setTextContent(vertex.getSimpleInfo().get(variable));
                         }
                     }
                     else{
-//                        System.out.println("no");
+                        /*System.out.println(nodes.item(i).getChildNodes().item(1).getNodeName());
+                        System.out.println(nodes.item(i).getChildNodes().item(1).getChildNodes().getLength());*/
+                        /*System.out.println(nodes.item(i).getNodeName());
+                        System.out.println("no");*/
                     }
                 }
+
                 /*try{
                     nodes.item(i).setTextContent(v.ge);
                 }catch(NullPointerException dataNotThere){
@@ -206,13 +344,25 @@ public class WriteXMLFile {
 
             }
 
+            Node stepNode = translatedDoc.importNode(documentI.getFirstChild(), true);
+            Node refNode = translatedDoc.getChildNodes().item(0).getChildNodes().item(findRefNode(translatedDoc));
+            translatedDoc.getChildNodes().item(0).insertBefore(stepNode,refNode);
 
+//            System.out.println(refNode.getNodeName());
 
 
         } catch (Exception TemplateNotFound){
             System.out.println(TemplateNotFound.getMessage());
         }
 
+    }
+
+    public int findRefNode(Document doc){
+        for (int n =0 ; n < doc.getFirstChild().getChildNodes().getLength(); n++)
+            if ((doc.getFirstChild().getChildNodes().item(n).getNodeName()).equals("step_error_handling")){
+                return n;
+            }
+        return 0;
     }
 
     public void addHop (String source, String target){
@@ -232,27 +382,6 @@ public class WriteXMLFile {
             System.out.println(TemplateNotFound.getMessage());
         }
 //        writeXML();
-    }
-
-    //
-    // Temporary get method to get step info
-    public ArrayList<String> getStepInfo (Integer i){
-        ArrayList<String> info = new ArrayList<>();
-        NodeList nodes = document.getElementsByTagName("node");
-
-        // adding name to arraylist
-        info.add(nodes.item(i).getChildNodes().item(1).getAttributes().getNamedItem("value").getNodeValue());
-        // adding type to arraylist
-        info.add(nodes.item(i).getAttributes().getNamedItem("componentName").getNodeValue());
-        // adding filename to input node
-        if (info.get(1).equals("tFileInputDelimited")){
-            info.add(nodes.item(i).getChildNodes().item(9).getAttributes().getNamedItem("value").getNodeValue());
-        }
-
-       /* for (String s : info){
-            System.out.println(s);
-        }*/
-        return info;
     }
 
     //
