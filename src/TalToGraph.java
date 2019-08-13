@@ -11,6 +11,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -22,8 +24,7 @@ public class TalToGraph {
     public TalToGraph(String talendXMLName){
 
         try {
-            // setting up documents to read from and write to, as xml document objects
-            InputStream inputStream = new FileInputStream(new File(talendXMLName)); //PROBLEM: when path is translated.xml, graph is NOT drawn
+            InputStream inputStream = new FileInputStream(new File(talendXMLName));
 
             DocumentBuilderFactory Tfactory = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder Tbuilder = Tfactory.newDocumentBuilder();
@@ -53,15 +54,51 @@ public class TalToGraph {
     public void addVertices(){
         NodeList vertices = document.getElementsByTagName("node");
         for (int i = 0; i < vertices.getLength(); i++){
+            TalNode vertex;
             // call method, passing through xml step, and takes in the data
             String vertexName = vertices.item(i).getChildNodes().item(1).getAttributes().getNamedItem("value").getNodeValue();
             String vertexType = vertices.item(i).getAttributes().getNamedItem("componentName").getNodeValue();
+            vertex = new TalNode(vertexName, vertexType);
             // System.out.println(vertexName + "  "+ vertexType);
+            for (int j = 0; j < vertices.item(i).getChildNodes().getLength(); j++){
+                Node nodeInfo = vertices.item(i).getChildNodes().item(j);
+                if (nodeInfo.getNodeType() != 3){
+                    try {
+                        String field = nodeInfo.getAttributes().getNamedItem("field").getNodeValue();
+                        if (!field.equals("TABLE")){
+                            String key = nodeInfo.getAttributes().getNamedItem("name").getNodeValue();
+                            String data = nodeInfo.getAttributes().getNamedItem("value").getNodeValue();
+                            vertex.addSimpleInfo(key, data);
+                        } else {
+                            HashMap<String, ArrayList<String>> table = vertex.addTable();
 
-            TalNode vertex = new TalNode();
-            vertex.setName(vertexName);
-            vertex.setType(vertexType);
+//                            System.out.println(nodeInfo.getAttributes().getNamedItem("name").getNodeValue());
+                            for (int k = 1; k < nodeInfo.getChildNodes().getLength(); k=k+2){
+                                String elementRef = nodeInfo.getChildNodes().item(k).getAttributes().getNamedItem("elementRef").getNodeValue();
+                                String value = nodeInfo.getChildNodes().item(k).getAttributes().getNamedItem("value").getNodeValue();
 
+                                if (table.containsKey(elementRef)){
+                                    table.get(elementRef).add(value);
+                                }
+                                else {
+                                    vertex.addTableInfo(table, elementRef, value);
+                                }
+                            }
+                        }
+//                        System.out.println(key +" = "+ data);
+
+                    }catch (NullPointerException NP){
+                        System.out.println("Null pointer in data extraction");
+                    }
+                }
+            }
+
+//            System.out.println(vertex.getSimpleInfo());
+
+//            TalNode vertex = new TalNode(vertexName, vertexType);
+            vertex.printTable();
+
+            // ERROR CAUGHT FOR METADATA NODES
             graph.addVertex(vertex);
         }
     }
