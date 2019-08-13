@@ -12,10 +12,26 @@ import java.util.*;
 import java.net.MalformedURLException;
 
 public class Mapping {
-    public void Mapping () {
-    }
+    private GraphIterator<XMLNode, DefaultEdge> talInputIterator;
 
-    List<String> inputNodeTypes = new List<String>() {
+    // Initialize static type dictionary.
+    private static Map<String, String> mappingDict; = new HashMap<>();
+    static {
+        // One-to-one.
+        // mappingDict.put("", "MergeNode");
+        // mappingDict.put("", "SelectValuesNode");
+        mappingDict.put("", "FilterNode");
+        mappingDict.put("Sort", "SortNode");
+        mappingDict.put("Input", "CSVInputNode");
+        mappingDict.put("AggregateSort", "GroupByNode");
+        mappingDict.put("Output", "TextOutputNode");
+        // One-to-two.
+        // mappingDict.put("a", "A");
+        // mappingDict.put("a", "A");
+        // mappingDict.put("a", "A");
+
+    };
+    private List<String> inputNodeTypes = new List<String>() {
         @Override
         public int size() {
             return 0;
@@ -132,7 +148,7 @@ public class Mapping {
             return null;
         }
     };
-    List<String> outputNodeTypes = new List<String>() {
+    private List<String> outputNodeTypes = new List<String>() {
         @Override
         public int size() {
             return 0;
@@ -258,6 +274,23 @@ public class Mapping {
             return null;
         }
     };
+
+    private Graph<XMLNode, DefaultEdge> talInputGraph;
+    private Graph<XMLNode, DefaultEdge> pentOutputGraph;
+
+    // Constructors. Overloaded.
+    public void Mapping() { }
+    public void Mapping(Graph<XMLNode, DefaultEdge> inputTalGraph) {
+
+        talInputGraph = inputTalGraph;
+        // Instantiate Iterator.
+        instantiateTalTopologicalIterator();
+    }
+
+
+
+
+
     // Testing assistance methods
 
     // use helper classes to define how vertices should be rendered,
@@ -299,8 +332,8 @@ public class Mapping {
             }
         };
         ComponentNameProvider<TalNode> vertexLabelProvider = new ComponentNameProvider<TalNode>() {
-            public String getName(TalNode pentNode) {
-                return pentNode.getType().replaceAll(" ", "_");
+            public String getName(TalNode talNode) {
+                return talNode.getType().replaceAll(" ", "_");
             }
         };
 
@@ -321,6 +354,8 @@ public class Mapping {
         }
     }
 
+
+    // Helper methods.
     public static void writeStringToNewFile(String str, String fileName)
             throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
@@ -328,6 +363,10 @@ public class Mapping {
         writer.close();
     }
 
+    private void instantiateTalTopologicalIterator() {
+        talInputIterator = new TopologicalOrderIterator<XMLNode, DefaultEdge>(talInputGraph);
+    }
+    /*
     public static Graph<URI, DefaultEdge> createHrefGraph() throws URISyntaxException {
         Graph<URI, DefaultEdge> g = new DefaultDirectedGraph(DefaultEdge.class);
         URI google = new URI("http://www.google.com");
@@ -342,4 +381,5 @@ public class Mapping {
         g.addEdge(wikipedia, google);
         return g;
     }
+     */
 }
