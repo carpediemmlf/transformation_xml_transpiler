@@ -1,6 +1,7 @@
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.generate.*;
+import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.io.*;
 import org.jgrapht.traverse.*;
 import org.xml.sax.SAXException;
@@ -364,6 +365,64 @@ public class Mapping {
     private void instantiateTalTopologicalIterator() {
         talInputIterator = new TopologicalOrderIterator<XMLNode, DefaultEdge>(talInputGraph);
     }
+
+
+    // talend section to pentnodes in graph
+    public Graph makePentahoGraph (Graph<TalNode, DefaultEdge> tGraph){
+        Graph<PentNode, DefaultEdge> pGraph = createGraph();
+
+        Iterator tGraphIt = tGraph.vertexSet().iterator();
+        while (tGraphIt.hasNext()){
+            TalNode tNode = (TalNode) tGraphIt.next();
+            String name = tNode.getName();
+            String type = tNode.getType();
+            System.out.println(name +":"+ type);
+
+            PentNode pNode;
+
+            switch (type){
+                case "CsvInput":
+                    pNode = new CSVInputNode(name, type,"DUMMY: filename");
+                    ((CSVInputNode) pNode).addField("Field 1");
+                    break;
+                case "TextFileOutput":
+                    pNode = new TextOutputNode(name, type, "filename55");
+                    ((TextOutputNode) pNode).addField("Out field");
+                    break;
+                case "SelectValues":
+                    pNode = new SelectValuesNode(name, type);
+                    ((SelectValuesNode) pNode).addField("Field 1", "Field One");
+                    break;
+                case "SortRows":
+                            pNode = new SortNode(name, type);
+                    ((SortNode) pNode).addField("Field 2", "Y", "N");
+                    break;
+                case "MergeJoin":
+                    pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
+                    break;
+                case "GroupBy":
+                    pNode = new GroupByNode(name, type);
+                    ((GroupByNode) pNode).addFieldToGroupBy("Dummy field1");
+                    ((GroupByNode) pNode).addAggregateField("Dummy Agrregate", "Dummy subject", "dummy type");
+                    break;
+                case "FilterRows":
+                    pNode = new FilterNode(name, type);
+                    ((FilterNode) pNode).addCondition("Y","Field 1", "<", "Field 2");
+                    break;
+                default:
+                    pNode = new PentNode(name,type);
+            }
+            pGraph.addVertex(pNode);
+
+        }
+
+        return pGraph;
+    }
+
+    private Graph<PentNode, DefaultEdge> createGraph(){
+        return GraphTypeBuilder.<PentNode,DefaultEdge>directed().allowingMultipleEdges(true).allowingSelfLoops(false).edgeClass(DefaultEdge.class).weighted(false).buildGraph();
+    }
+
     /*
     public static Graph<URI, DefaultEdge> createHrefGraph() throws URISyntaxException {
         Graph<URI, DefaultEdge> g = new DefaultDirectedGraph(DefaultEdge.class);
