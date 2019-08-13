@@ -1,0 +1,11 @@
+digraph G {
+  tFileInputDelimited_1 [ label="tFileInputDelimited" ];
+  tSortRow_1 [ label="tSortRow" ];
+  tLogRow_1 [ label="tLogRow" ];
+  tAggregateSortedRow_1 [ label="tAggregateSortedRow" ];
+  tFileOutputDelimited_1 [ label="tFileOutputDelimited" ];
+  tFileInputDelimited_1 -> tSortRow_1;
+  tSortRow_1 -> tLogRow_1;
+  tLogRow_1 -> tAggregateSortedRow_1;
+  tAggregateSortedRow_1 -> tFileOutputDelimited_1;
+}

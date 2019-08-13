@@ -22,10 +22,11 @@ public class Mapping {
         // mappingDict.put("", "MergeNode");
         // mappingDict.put("", "SelectValuesNode");
         // mappingDict.put("", "FilterNode");
-        mappingDict.put("Sort", "SortNode");
-        mappingDict.put("Input", "CSVInputNode");
-        mappingDict.put("AggregateSort", "GroupByNode");
-        mappingDict.put("Output", "TextOutputNode");
+        mappingDict.put("tLogRow", "");
+        mappingDict.put("tSortRow", "SortNode");
+        mappingDict.put("tFileInputDelimited", "CSVInputNode");
+        mappingDict.put("tAggregateSortedRow", "GroupByNode");
+        mappingDict.put("tFileOutputDelimited", "TextOutputNode");
         // One-to-two.
         // mappingDict.put("a", "A_D");
         // mappingDict.put("a", "A");

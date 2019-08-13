@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-    public static void main  (String [] args)
+    public static void main (String [] args)
             throws URISyntaxException, ExportException, IOException, ParserConfigurationException, SAXException {
 
         // PentahoToGraph grapher = new PentahoToGraph("WorkingEg.ktr");
@@ -32,7 +32,12 @@ public class Main {
 
         // WriteXMLFile writer = new WriteXMLFile(grapher.getGraph());
 
-        TalToGraph talGrapher = new TalToGraph("WorkingEg.ktr")
+        TalToGraph talGrapher = new TalToGraph("talendXML/tSortRow_0.1.item");
+
+        Mapping mapper = new Mapping();
+
+        mapper.talToDot(talGrapher.getGraph(), "dotAndpsFiles/tSortRow_0.1.dot");
+
 
     }
 }
