@@ -4,6 +4,7 @@ import org.jgrapht.generate.*;
 import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.io.*;
 import org.jgrapht.traverse.*;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -370,58 +371,70 @@ public class Mapping {
 
 
     // talend section to pentnodes in graph
-    public Graph makePentahoGraph (Graph<TalNode, DefaultEdge> tGraph){
+    public Graph convertNode (TalNode tNode, String type){
         Graph<PentNode, DefaultEdge> pGraph = createGraph();
 
-        Iterator tGraphIt = tGraph.vertexSet().iterator();
-        while (tGraphIt.hasNext()){
-            TalNode tNode = (TalNode) tGraphIt.next();
-            String name = tNode.getName();
-            String type = tNode.getType();
-            System.out.println(name +":"+ type);
-
-            PentNode pNode;
-
-            switch (type){
-                case "CsvInput":
-                    pNode = new CSVInputNode(name, type,"DUMMY: filename");
-                    ((CSVInputNode) pNode).addField("Field 1");
-                    break;
-                case "TextFileOutput":
-                    pNode = new TextOutputNode(name, type, "filename55");
-                    ((TextOutputNode) pNode).addField("Out field");
-                    break;
-                case "SelectValues":
-                    pNode = new SelectValuesNode(name, type);
-                    ((SelectValuesNode) pNode).addField("Field 1", "Field One");
-                    break;
-                case "SortRows":
-                            pNode = new SortNode(name, type);
-                    ((SortNode) pNode).addField("Field 2", "Y", "N");
-                    break;
-                case "MergeJoin":
-                    pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
-                    break;
-                case "GroupBy":
-                    pNode = new GroupByNode(name, type);
-                    ((GroupByNode) pNode).addFieldToGroupBy("Dummy field1");
-                    ((GroupByNode) pNode).addAggregateField("Dummy Agrregate", "Dummy subject", "dummy type");
-                    break;
-                case "FilterRows":
-                    pNode = new FilterNode(name, type);
-                    ((FilterNode) pNode).addCondition("Y","Field 1", "<", "Field 2");
-                    break;
-                default:
-                    pNode = new PentNode(name,type);
+        if (type.contains("_")){
+            String [] arr = type.split("_");
+            PentNode previousNode = null;
+            for (int i=0; i< arr.length ;i++){
+                PentNode node = createSinglePentNode(tNode, type);
+                pGraph.addVertex(node);
+                if (i != 0){
+                    try{
+                        pGraph.addEdge(previousNode, node);
+                    } catch (NullPointerException NP){
+                        System.out.println("Error: Created null node!");
+                    }
+                }
+                previousNode = node;
             }
-            pGraph.addVertex(pNode);
-
         }
-
+        else {
+            pGraph.addVertex(createSinglePentNode(tNode,type));
+        }
         return pGraph;
     }
 
-    private Graph<PentNode, DefaultEdge> createGraph(){
+    public PentNode createSinglePentNode (TalNode tNode, String type) {
+        PentNode pNode;
+        String name = tNode.getName();
+        switch (type){
+            case "CsvInput":
+                pNode = new CSVInputNode(name, type,"DUMMY: filename");
+                ((CSVInputNode) pNode).addField("Field 1");
+                break;
+            case "TextFileOutput":
+                pNode = new TextOutputNode(name, type, "filename55");
+                ((TextOutputNode) pNode).addField("Out field");
+                break;
+            case "SelectValues":
+                pNode = new SelectValuesNode(name, type);
+                ((SelectValuesNode) pNode).addField("Field 1", "Field One");
+                break;
+            case "SortRows":
+                pNode = new SortNode(name, type);
+                ((SortNode) pNode).addField("Field 2", "Y", "N");
+                break;
+            case "MergeJoin":
+                pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
+                break;
+            case "GroupBy":
+                pNode = new GroupByNode(name, type);
+                ((GroupByNode) pNode).addFieldToGroupBy("Dummy field1");
+                ((GroupByNode) pNode).addAggregateField("Dummy Agrregate", "Dummy subject", "dummy type");
+                break;
+            case "FilterRows":
+                pNode = new FilterNode(name, type);
+                ((FilterNode) pNode).addCondition("Y","Field 1", "<", "Field 2");
+                break;
+            default:
+                pNode = new PentNode(name,type);
+        }
+        return pNode;
+    }
+
+        private Graph<PentNode, DefaultEdge> createGraph(){
         return GraphTypeBuilder.<PentNode,DefaultEdge>directed().allowingMultipleEdges(true).allowingSelfLoops(false).edgeClass(DefaultEdge.class).weighted(false).buildGraph();
     }
 
