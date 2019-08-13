@@ -26,11 +26,13 @@ public class Main {
     public static void main  (String [] args)
             throws URISyntaxException, ExportException, IOException, ParserConfigurationException, SAXException {
 
-        PentahoToGraph grapher = new PentahoToGraph("WorkingEg.ktr");
-/*
-        PentahoToGraph grapher = new PentahoToGraph("pentaho_input_output.ktr");
-*/
-        WriteXMLFile writer = new WriteXMLFile(grapher.getGraph());
+        // PentahoToGraph grapher = new PentahoToGraph("WorkingEg.ktr");
+
+        // PentahoToGraph grapher = new PentahoToGraph("pentaho_input_output.ktr");
+
+        // WriteXMLFile writer = new WriteXMLFile(grapher.getGraph());
+
+        TalToGraph talGrapher = new TalToGraph("WorkingEg.ktr")
 
     }
 }
