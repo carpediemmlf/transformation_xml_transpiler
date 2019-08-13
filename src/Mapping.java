@@ -15,12 +15,12 @@ public class Mapping {
     private GraphIterator<XMLNode, DefaultEdge> talInputIterator;
 
     // Initialize static type dictionary.
-    private static Map<String, String> mappingDict; = new HashMap<>();
+    private static Map<String, String> mappingDict = new HashMap<String, String>();
     static {
         // One-to-one.
         // mappingDict.put("", "MergeNode");
         // mappingDict.put("", "SelectValuesNode");
-        mappingDict.put("", "FilterNode");
+        // mappingDict.put("", "FilterNode");
         mappingDict.put("Sort", "SortNode");
         mappingDict.put("Input", "CSVInputNode");
         mappingDict.put("AggregateSort", "GroupByNode");
@@ -29,7 +29,6 @@ public class Mapping {
         // mappingDict.put("a", "A");
         // mappingDict.put("a", "A");
         // mappingDict.put("a", "A");
-
     };
     private List<String> inputNodeTypes = new List<String>() {
         @Override
@@ -287,11 +286,10 @@ public class Mapping {
         instantiateTalTopologicalIterator();
     }
 
+    // Muhammed is working on this.
+    private void map() {
 
-
-
-
-    // Testing assistance methods
+    }
 
     // use helper classes to define how vertices should be rendered,
     // adhering to the DOT language restrictions
