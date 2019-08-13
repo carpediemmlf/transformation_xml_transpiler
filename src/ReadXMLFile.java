@@ -84,7 +84,7 @@ public class ReadXMLFile {
                     }
 
                 }
-                System.out.println(map);
+                // System.out.println(map);
 
             }
 

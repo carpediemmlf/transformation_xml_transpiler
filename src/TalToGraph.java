@@ -34,7 +34,7 @@ public class TalToGraph {
             graph=createGraph();
             addVertices();
             addEdges();
-            System.out.println(graph);
+            // System.out.println(graph);
 
         } catch (FileNotFoundException notFound){
             System.out.println("File wasn't found");
@@ -89,7 +89,7 @@ public class TalToGraph {
 //                        System.out.println(key +" = "+ data);
 
                     }catch (NullPointerException NP){
-                        System.out.println("Null pointer in data extraction");
+                        // System.out.println("Null pointer in data extraction");
                     }
                 }
             }
@@ -97,7 +97,7 @@ public class TalToGraph {
 //            System.out.println(vertex.getSimpleInfo());
 
 //            TalNode vertex = new TalNode(vertexName, vertexType);
-            vertex.printTable();
+            // vertex.printTable();
 
             // ERROR CAUGHT FOR METADATA NODES
             graph.addVertex(vertex);
@@ -144,7 +144,7 @@ public class TalToGraph {
                 if (source != null & target != null) {
                     graph.addEdge(source, target);
                 } else {
-                    System.out.println("Nodes not found in graph");
+                    // System.out.println("Nodes not found in graph");
                 }
             }
         }
