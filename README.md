@@ -7,6 +7,5 @@
 ## Tasks
 - [x] IO: read input xml into lists of vertices (with type and id) and links (with type and id and source and targets).
 - [x] IO: output executable xml from intermediate representation by pre-defined templates of pentaho xml.
-- [ ] IO: output class should be created
-- [ ] Mapping: writing an interpreter on csvInput, csvOutput.
-- [ ]
+- [x] IO: output class should be created
+- [ ] Mapping: writing an interpreter on input graph and output graph.
