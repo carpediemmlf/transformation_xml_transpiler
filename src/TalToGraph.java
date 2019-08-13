@@ -70,9 +70,10 @@ public class TalToGraph {
                             String data = nodeInfo.getAttributes().getNamedItem("value").getNodeValue();
                             vertex.addSimpleInfo(key, data);
                         } else {
-                            HashMap<String, ArrayList<String>> table = vertex.addTable();
-
 //                            System.out.println(nodeInfo.getAttributes().getNamedItem("name").getNodeValue());
+
+                            HashMap<String, ArrayList<String>> table = vertex.addTable(nodeInfo.getAttributes().getNamedItem("name").getNodeValue());
+
                             for (int k = 1; k < nodeInfo.getChildNodes().getLength(); k=k+2){
                                 String elementRef = nodeInfo.getChildNodes().item(k).getAttributes().getNamedItem("elementRef").getNodeValue();
                                 String value = nodeInfo.getChildNodes().item(k).getAttributes().getNamedItem("value").getNodeValue();

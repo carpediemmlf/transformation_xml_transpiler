@@ -47,8 +47,12 @@ public class TalNode {
     public ArrayList<HashMap<String, ArrayList<String>>> getTableInfo() {
         return tableInfo;
     }
-    public HashMap<String, ArrayList<String>> addTable (){
+
+    public HashMap<String, ArrayList<String>> addTable (String tableName){
         HashMap<String, ArrayList<String>> table = new HashMap<>();
+        ArrayList<String> nameArr = new ArrayList<>();
+        nameArr.add(tableName);
+        table.put("TableName", nameArr);
         tableInfo.add(table);
         return table;
     }
