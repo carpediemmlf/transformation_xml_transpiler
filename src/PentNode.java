@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PentNode {
+public class PentNode extends XMLNode {
     private String name;
     private String type;
     private String xLoc;
@@ -23,10 +23,12 @@ public class PentNode {
     }
 
     // Getters
+    @Override
     public String getName(){
         return name;
     }
 
+    @Override
     public String getType(){
         return type;
     }

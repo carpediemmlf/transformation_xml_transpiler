@@ -14,7 +14,7 @@ import java.util.*;
 import java.net.MalformedURLException;
 
 public class Mapping {
-    private GraphIterator<XMLNode, DefaultEdge> talInputIterator;
+    private GraphIterator<TalNode, DefaultEdge> talInputIterator;
 
     // Initialize static type dictionary.
     private static Map<String, String> mappingDict = new HashMap<String, String>();
@@ -35,12 +35,12 @@ public class Mapping {
     };
 
 
-    private Graph<XMLNode, DefaultEdge> talInputGraph;
-    private Graph<XMLNode, DefaultEdge> pentOutputGraph;
+    private Graph<TalNode, DefaultEdge> talInputGraph;
+    private Graph<PentNode, DefaultEdge> pentOutputGraph;
 
     // Constructors. Overloaded.
-    public void Mapping() { }
-    public void Mapping(Graph<XMLNode, DefaultEdge> inputTalGraph) {
+    Mapping() { }
+    Mapping(Graph<TalNode, DefaultEdge> inputTalGraph) {
 
         talInputGraph = inputTalGraph;
         // Instantiate Iterator.
@@ -48,12 +48,14 @@ public class Mapping {
     }
 
     // Muhammed is working on this.
-    private void map() {
-
+    public void map() {
+        while (talInputIterator.hasNext()) {
+            System.out.println(((talInputIterator.next())).getType());
+        }
     }
 
-    // use helper classes to define how vertices should be rendered,
-    // adhering to the DOT language restrictions
+    // Use helper classes to define how vertices should be rendered,
+    // Adhering to the DOT language restrictions
 
     public void pentToDot(Graph<PentNode, DefaultEdge> pentGraph, String fileName) {
         ComponentNameProvider<PentNode> vertexIdProvider = new ComponentNameProvider<PentNode>() {
@@ -123,7 +125,7 @@ public class Mapping {
     }
 
     private void instantiateTalTopologicalIterator() {
-        talInputIterator = new TopologicalOrderIterator<XMLNode, DefaultEdge>(talInputGraph);
+        talInputIterator = new TopologicalOrderIterator<TalNode, DefaultEdge>(talInputGraph);
     }
 
 

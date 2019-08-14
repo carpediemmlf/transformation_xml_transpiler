@@ -32,12 +32,12 @@ public class Main {
 
         // WriteXMLFile writer = new WriteXMLFile(grapher.getGraph());
 
-        TalToGraph talGrapher = new TalToGraph("talendXML/tSortRow_0.1.item");
+        TalToGraph talGrapher = new TalToGraph("talendXML/DEMOTALEND_0.1.item");
 
-        Mapping mapper = new Mapping();
+        Mapping mapper = new Mapping((talGrapher.getGraph()));
 
-        mapper.talToDot(talGrapher.getGraph(), "dotAndpsFiles/tSortRow_0.1.dot");
+        mapper.map();
 
-
+        mapper.talToDot(talGrapher.getGraph(), "dotAndpsFiles/DEMOTALEND_0.1.dot");
     }
 }

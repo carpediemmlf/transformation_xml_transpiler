@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class TalNode {
+public class TalNode extends XMLNode {
     private String name;
     private String type;
     private HashMap<String, String> simpleInfo = new HashMap<>();
@@ -29,12 +29,14 @@ public class TalNode {
     public void setName(String name) {
         this.name = name;
     }
+    @Override
     public String getName(){
         return name;
     }
     public void setType(String type) {
         this.type = type;
     }
+    @Override
     public String getType() { return type; }
 
     public void addSimpleInfo (String key, String data){
