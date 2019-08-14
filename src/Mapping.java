@@ -136,7 +136,7 @@ public class Mapping {
             String [] arr = type.split("_");
             PentNode previousNode = null;
             for (int i=0; i< arr.length ;i++){
-                PentNode node = createSinglePentNode(tNode, type);
+                PentNode node = createSinglePentNode(tNode, arr[i], i);
                 pGraph.addVertex(node);
                 if (i != 0){
                     try{
@@ -149,19 +149,35 @@ public class Mapping {
             }
         }
         else {
-            pGraph.addVertex(createSinglePentNode(tNode,type));
+            pGraph.addVertex(createSinglePentNode(tNode,type, 0));
         }
+        System.out.println(pGraph);
         return pGraph;
     }
 
-
-    public PentNode createSinglePentNode (TalNode tNode, String type) {
-        PentNode pNode;
+// Assumes certain data is provided, ie filename, sparatores ect
+    public PentNode createSinglePentNode (TalNode tNode, String type, int nameTag) {
+        PentNode pNode = null;   // Possibly worth netting whole switch in try catch
         String name = tNode.getName();
         switch (type){
             case "CsvInput":
-                pNode = new CSVInputNode(name, type,"DUMMY: filename");
-                ((CSVInputNode) pNode).addField("Field 1");
+                try{
+                    pNode = new CSVInputNode(name, type, tNode.getSimpleInfo().get("FILENAME")/*"DUMMY: filename"*/);
+//                System.out.println(pNode.getSimpleInfo().get("filename"));
+//                tNode.getSimpleInfo().remove("FIELDSEPARATOR");
+                    ((CSVInputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
+                    ((CSVInputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
+//                System.out.println(((CSVInputNode) pNode).getSeparator() + ((CSVInputNode) pNode).getEnclosure());
+
+                    HashMap<String, ArrayList<String>> selectTable = tNode.getTableInfo().get(0);
+                    ArrayList<String> fields = selectTable.get("SCHEMA_COLUMN");
+
+                    for (String field : fields){
+                        ((CSVInputNode) pNode).addField(field);
+                    }
+                } catch (NullPointerException | IndexOutOfBoundsException invalidData){
+                    System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
+                }
                 break;
             case "TextFileOutput":
                 pNode = new TextOutputNode(name, type, "filename55");
@@ -190,6 +206,12 @@ public class Mapping {
             default:
                 pNode = new PentNode(name,type);
         }
+        if (nameTag != 0){
+            String newName = tNode.getName() + "(" + Integer.toString(nameTag) + ")";
+//            System.out.println(newName);
+            pNode.setName(newName);
+        }
+//        System.out.println("returning node : " + pNode.getName());
         return pNode;
     }
 
@@ -213,4 +235,12 @@ public class Mapping {
         return g;
     }
      */
+
+    public void iterate (Iterator it){
+        while (it.hasNext()){
+            TalNode node = (TalNode) it.next();
+            convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
+//            WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
+        }
+    }
 }
