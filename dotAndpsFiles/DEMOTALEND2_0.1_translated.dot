@@ -1,0 +1,17 @@
+digraph G {
+  tFileInputDelimited_1 [ label="CsvInput" ];
+  tFileInputDelimited_2 [ label="CsvInput" ];
+  tSortRow_1 [ label="SortRows" ];
+  tMap_1 [ label="MergeJoin" ];
+  tLogRow_1 [ label="Dummy" ];
+  tFileOutputDelimited_2 [ label="TextFileOutput" ];
+  tAggregateSortedRow_1 [ label="GroupBy" ];
+  tFileOutputDelimited_1 [ label="TextFileOutput" ];
+  tFileInputDelimited_1 -> tSortRow_1;
+  tFileInputDelimited_1 -> tMap_1;
+  tFileInputDelimited_2 -> tMap_1;
+  tSortRow_1 -> tLogRow_1;
+  tMap_1 -> tFileOutputDelimited_2;
+  tLogRow_1 -> tAggregateSortedRow_1;
+  tAggregateSortedRow_1 -> tFileOutputDelimited_1;
+}
