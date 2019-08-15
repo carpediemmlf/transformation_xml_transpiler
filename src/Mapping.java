@@ -29,7 +29,7 @@ public class Mapping {
         mappingDict.put("tLogRow", "");
         mappingDict.put("tSortRow", "SortRows");
         mappingDict.put("tFileInputDelimited", "CsvInput");
-        mappingDict.put("tAggregateSortedRow", "GroupByNode");
+        mappingDict.put("tAggregateSortedRow", "GroupBy");
         mappingDict.put("tFileOutputDelimited", "TextFileOutput");
         // One-to-two.
         // mappingDict.put("a", "A_D");
@@ -212,9 +212,9 @@ public class Mapping {
                     String ascending = order.get(i).replace("asc", "Y").replace("desc", "N");
 //                    order.get(i) = order.get(i).replace("asc", "Y");
 //                    order.get(i).replace("desc", "N");
-                    System.out.println(column.get(i));
+                    /*System.out.println(column.get(i));
                     System.out.println(ascending);
-                    System.out.println("----------");
+                    System.out.println("----------");*/
                     ((SortNode) pNode).addField(column.get(i), ascending,"N");
                 }
 
@@ -225,8 +225,27 @@ public class Mapping {
                 break;
             case "GroupBy":
                 pNode = new GroupByNode(name, type);
-                ((GroupByNode) pNode).addFieldToGroupBy("Dummy field1");
-                ((GroupByNode) pNode).addAggregateField("Dummy Agrregate", "Dummy subject", "dummy type");
+                HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
+                HashMap<String, ArrayList<String>> operations = tNode.getTableInfo().get(1);
+                /*System.out.println(groupBys);
+                System.out.println(operations);*/
+                ArrayList<String> inputs = groupBys.get("INPUT_COLUMN");
+
+                ArrayList<String> outputs = operations.get("OUTPUT_COLUMN");
+                ArrayList<String> inputCol = operations.get("INPUT_COLUMN");
+                ArrayList<String> function = operations.get("FUNCTION");
+
+                for (String s : inputs){
+                    ((GroupByNode) pNode).addFieldToGroupBy(s);
+                }
+
+                for (int i = 0; i < outputs.size() ; i++){
+                    ((GroupByNode) pNode).addAggregateField(outputs.get(i), inputCol.get(0), function.get(i));
+                }
+
+//                System.out.println(((GroupByNode) pNode).getFields().get(0).groupByFieldInfo);
+
+
                 break;
             case "FilterRows":
                 pNode = new FilterNode(name, type);
