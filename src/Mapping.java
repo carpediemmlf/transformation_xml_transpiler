@@ -20,6 +20,8 @@ public class Mapping {
 
     private Graph<TalNode, DefaultEdge> talInputGraph;
     private Graph<PentNode, DefaultEdge> pentOutputGraph;
+    private boolean outputPentVerticesCreated = false;
+    private boolean isOutputPentEdgesCreated = false;
     // Initialize static type dictionary.
     private static Map<String, String> mappingDict = new HashMap<String, String>();
     static {
@@ -46,23 +48,34 @@ public class Mapping {
         talInputGraph = inputTalGraph;
         // Instantiate Iterator.
         instantiateTalTopologicalIterator();
-
-
     }
 
     // Muhammed is working on this.
+    public Graph<PentNode, DefaultEdge> outputGraph() {
+        return pentOutputGraph;
+    }
     public void map() {
+        createVerticesOnlyPentGraph();
+        try {
+            if (!outputPentVerticesCreated) {
+                throw new ExceptionInInitializerError("Output pent nodes not created.");
+            } else {
+                appendEdgesToPentGraph();
+            }
+        } catch (ExceptionInInitializerError e) {
+             System.out.println(e.toString());
+            }
         // Generate PentNodes.
-        while (talInputIterator.hasNext()) {
-            System.out.println(((talInputIterator.next())).getType());
-            System.out.println("Node translated.");
-        }
-        instantiateTalTopologicalIterator();
+        // while (talInputIterator.hasNext()) {
+        //     System.out.println(((talInputIterator.next())).getType());
+        //     System.out.println("Node translated.");
+        // }
+        // instantiateTalTopologicalIterator();
         // Fill in
-        while (talInputIterator.hasNext()) {
-            System.out.println(((talInputIterator.next())).getType());
-            System.out.println("Node translated.");
-        }
+        // while (talInputIterator.hasNext()) {
+        //     System.out.println(((talInputIterator.next())).getType());
+        //     System.out.println("Node translated.");
+        // }
     }
 
     // Use helper classes to define how vertices should be rendered,
@@ -166,7 +179,7 @@ public class Mapping {
             }
         }
         else {
-            PentNode node = createSinglePentNode(tNode,type, 0)
+            PentNode node = createSinglePentNode(tNode,type, 0);
             pGraph.addVertex(node);
             // Add head and tail
             tNode.setHeadPentNode(node);
@@ -176,7 +189,7 @@ public class Mapping {
         return pGraph;
     }
 
-// Assumes certain data is provided, ie filename, sparatores ect
+    // Assumes certain data is provided, ie filename, sparatores ect
     public PentNode createSinglePentNode (TalNode tNode, String type, int nameTag) {
         PentNode pNode = null;   // Possibly worth netting whole switch in try catch
         String name = tNode.getName();
@@ -289,7 +302,7 @@ public class Mapping {
     private Graph<PentNode, DefaultEdge> createGraph() {
         return GraphTypeBuilder.<PentNode,DefaultEdge>directed().allowingMultipleEdges(true).allowingSelfLoops(false).edgeClass(DefaultEdge.class).weighted(false).buildGraph();
     }
-    // https://jgrapht.org/javadoc/org/jgrapht/Graphs.html#addGraph-org.jgrapht.Graph-org.jgrapht.Graph-
+
     /*
     public static Graph<URI, DefaultEdge> createHrefGraph() throws URISyntaxException {
         Graph<URI, DefaultEdge> g = new DefaultDirectedGraph(DefaultEdge.class);
@@ -307,7 +320,7 @@ public class Mapping {
     }
      */
 
-    private void createVertexOnlyPentGraph() {
+    private void createVerticesOnlyPentGraph() {
         pentOutputGraph = createGraph();
         instantiateTalTopologicalIterator();
         while (talInputIterator.hasNext()){
@@ -319,7 +332,19 @@ public class Mapping {
                 // System.out.println(finalPentGraph);
             }
         }
+        outputPentVerticesCreated = true;
     }
+    private void appendEdgesToPentGraph() {
+        instantiateTalTopologicalIterator();
+        while (talInputIterator.hasNext()){
+            TalNode node = (TalNode) talInputIterator.next();
+            List<TalNode> predecessors = Graphs.predecessorListOf(talInputGraph, node);
+            for (TalNode pred : predecessors) {
+                pentOutputGraph.addEdge(pred.getTailPentNode(), node.getHeadPentNode());
+            }
+        }
+    }
+
     public void iterate (Iterator it){
         Graph<PentNode, DefaultEdge> finalPentGraph = createGraph();
         while (it.hasNext()){
