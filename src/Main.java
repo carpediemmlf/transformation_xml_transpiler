@@ -33,10 +33,11 @@ public class Main {
 
         // WriteXMLFile writer = new WriteXMLFile(grapher.getGraph());
 
-        TalToGraph talGrapher = new TalToGraph("talendXML/DEMOTALEND_0.1.item");
+        TalToGraph talGrapher = new TalToGraph("talendXML/DEMOTALEND2_0.1.item");
 
         Mapping mapper = new Mapping(talGrapher.getGraph());
         mapper.map();
+
 /*
         Iterator it = talGrapher.getGraph().vertexSet().iterator();
 
@@ -44,8 +45,6 @@ public class Main {
 
         mapper.iterate(it);
 */
-        mapper.pentToDot(mapper.getOutputGraph(), "dotAndpsFiles/DEMOTALEND_0.1_translated.dot");
-
-
+        mapper.pentToDot(mapper.getOutputGraph(), "dotAndpsFiles/DEMOTALEND2_0.1_translated.dot");
     }
 }
