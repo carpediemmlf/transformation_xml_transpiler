@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.net.MalformedURLException;
+import java.util.function.Supplier;
 
 public class Mapping {
     private GraphIterator<TalNode, DefaultEdge> talInputIterator;
@@ -45,6 +46,8 @@ public class Mapping {
         talInputGraph = inputTalGraph;
         // Instantiate Iterator.
         instantiateTalTopologicalIterator();
+
+
     }
 
     // Muhammed is working on this.
@@ -139,7 +142,7 @@ public class Mapping {
 
     // talend section to pentnodes in graph
 
-    public Graph convertNode (TalNode tNode, String type){
+    public Graph convertNode (TalNode tNode, String type) {
         Graph<PentNode, DefaultEdge> pGraph = createGraph();
 
         if (type.contains("_")){
@@ -275,7 +278,7 @@ public class Mapping {
         return pNode;
     }
 
-    private Graph<PentNode, DefaultEdge> createGraph(){
+    private Graph<PentNode, DefaultEdge> createGraph() {
         return GraphTypeBuilder.<PentNode,DefaultEdge>directed().allowingMultipleEdges(true).allowingSelfLoops(false).edgeClass(DefaultEdge.class).weighted(false).buildGraph();
     }
 
