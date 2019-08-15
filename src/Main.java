@@ -19,6 +19,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class Main {
@@ -32,12 +33,20 @@ public class Main {
 
         // WriteXMLFile writer = new WriteXMLFile(grapher.getGraph());
 
-        TalToGraph talGrapher = new TalToGraph("talendXML/DEMOTALEND_0.1.item");
+        TalToGraph talGrapher = new TalToGraph("talendXML/talend_input_output.item");
 
-        Mapping mapper = new Mapping((talGrapher.getGraph()));
+        Mapping mapper = new Mapping();
 
-        mapper.map();
 
-        mapper.talToDot(talGrapher.getGraph(), "dotAndpsFiles/DEMOTALEND_0.1.dot");
+
+        Iterator it = talGrapher.getGraph().vertexSet().iterator();
+/*
+        WriteXMLFile writer = new WriteXMLFile(mapper.convertNode(talGrapher.getGraph().vertexSet().iterator().next(), "CsvInput"));
+*/
+        mapper.iterate(it);
+
+//        mapper.talToDot(talGrapher.getGraph(), "dotAndpsFiles/tSortRow_0.1.dot");
+
+
     }
 }

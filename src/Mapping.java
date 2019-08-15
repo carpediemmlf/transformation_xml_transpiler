@@ -5,6 +5,7 @@ import org.jgrapht.graph.builder.GraphTypeBuilder;
 import org.jgrapht.io.*;
 import org.jgrapht.traverse.*;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,10 +27,10 @@ public class Mapping {
         // mappingDict.put("", "SelectValuesNode");
         // mappingDict.put("", "FilterNode");
         mappingDict.put("tLogRow", "");
-        mappingDict.put("tSortRow", "SortNode");
-        mappingDict.put("tFileInputDelimited", "CSVInputNode");
+        mappingDict.put("tSortRow", "SortRows");
+        mappingDict.put("tFileInputDelimited", "CsvInput");
         mappingDict.put("tAggregateSortedRow", "GroupByNode");
-        mappingDict.put("tFileOutputDelimited", "TextOutputNode");
+        mappingDict.put("tFileOutputDelimited", "TextFileOutput");
         // One-to-two.
         // mappingDict.put("a", "A_D");
         // mappingDict.put("a", "A");
@@ -189,8 +190,11 @@ public class Mapping {
                 }
                 break;
             case "TextFileOutput":
-                pNode = new TextOutputNode(name, type, "filename55");
-                ((TextOutputNode) pNode).addField("Out field");
+                pNode = new TextOutputNode(name, type, tNode.getSimpleInfo().get("FILENAME")/*"filename55"*/);
+                ((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
+                ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
+//                System.out.println(((TextOutputNode) pNode).getSeparator() + ((TextOutputNode) pNode).getEnclosure());
+                // NO FIELD DATA AVAILABLE TO TRANSFER
                 break;
             case "SelectValues":
                 pNode = new SelectValuesNode(name, type);
@@ -198,6 +202,22 @@ public class Mapping {
                 break;
             case "SortRows":
                 pNode = new SortNode(name, type);
+
+                HashMap<String, ArrayList<String>> selectTable = tNode.getTableInfo().get(0);
+//                System.out.println(selectTable);
+                ArrayList<String> column = selectTable.get("COLNAME");
+                ArrayList<String> order = selectTable.get("ORDER");
+
+                for (int i=0 ; i< column.size() ; i++){
+                    String ascending = order.get(i).replace("asc", "Y").replace("desc", "N");
+//                    order.get(i) = order.get(i).replace("asc", "Y");
+//                    order.get(i).replace("desc", "N");
+                    System.out.println(column.get(i));
+                    System.out.println(ascending);
+                    System.out.println("----------");
+                    ((SortNode) pNode).addField(column.get(i), ascending,"N");
+                }
+
                 ((SortNode) pNode).addField("Field 2", "Y", "N");
                 break;
             case "MergeJoin":
@@ -248,8 +268,11 @@ public class Mapping {
     public void iterate (Iterator it){
         while (it.hasNext()){
             TalNode node = (TalNode) it.next();
-            convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
+            if (mappingDict.containsKey(node.getType())){
+                convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
 //            WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
+            }
+
         }
     }
 }
