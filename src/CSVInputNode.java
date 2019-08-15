@@ -13,6 +13,9 @@ public class CSVInputNode extends PentNode {
         this.filename= filename;
         getSimpleInfo().put("filename", filename);
     }
+    public CSVInputNode (String name, String type){
+        super(name,type);
+    }
     // setters
     public void addField (String fieldName){
         CSVInputField field = new CSVInputField(fieldName);

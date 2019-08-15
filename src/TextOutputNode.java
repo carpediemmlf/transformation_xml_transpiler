@@ -15,6 +15,11 @@ public class TextOutputNode extends PentNode {
         this.filename= filename;
         fileInfo.put("name", filename);
     }
+
+    public TextOutputNode (String name, String type){
+        super(name,type);
+    }
+
     // setters
     public void addField (String fieldName){
             TextOutputField field = new TextOutputField(fieldName);

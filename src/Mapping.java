@@ -187,14 +187,20 @@ public class Mapping {
                     }
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
                     System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
+                    pNode = new CSVInputNode(name, type);
                 }
                 break;
             case "TextFileOutput":
-                pNode = new TextOutputNode(name, type, tNode.getSimpleInfo().get("FILENAME")/*"filename55"*/);
-                ((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
-                ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
+                try {
+                    pNode = new TextOutputNode(name, type, tNode.getSimpleInfo().get("FILENAME")/*"filename55"*/);
+                    ((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
+                    ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
 //                System.out.println(((TextOutputNode) pNode).getSeparator() + ((TextOutputNode) pNode).getEnclosure());
-                // NO FIELD DATA AVAILABLE TO TRANSFER
+                    // NO FIELD DATA AVAILABLE TO TRANSFER
+                } catch (NullPointerException | IndexOutOfBoundsException invalidData){
+                    System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
+                    pNode = new TextOutputNode(name, type);
+                }
                 break;
             case "SelectValues":
                 pNode = new SelectValuesNode(name, type);
@@ -202,50 +208,56 @@ public class Mapping {
                 break;
             case "SortRows":
                 pNode = new SortNode(name, type);
-
-                HashMap<String, ArrayList<String>> selectTable = tNode.getTableInfo().get(0);
+                try {
+                    HashMap<String, ArrayList<String>> selectTable = tNode.getTableInfo().get(0);
 //                System.out.println(selectTable);
-                ArrayList<String> column = selectTable.get("COLNAME");
-                ArrayList<String> order = selectTable.get("ORDER");
+                    ArrayList<String> column = selectTable.get("COLNAME");
+                    ArrayList<String> order = selectTable.get("ORDER");
 
-                for (int i=0 ; i< column.size() ; i++){
-                    String ascending = order.get(i).replace("asc", "Y").replace("desc", "N");
+                    for (int i=0 ; i< column.size() ; i++){
+                        String ascending = order.get(i).replace("asc", "Y").replace("desc", "N");
 //                    order.get(i) = order.get(i).replace("asc", "Y");
 //                    order.get(i).replace("desc", "N");
                     /*System.out.println(column.get(i));
                     System.out.println(ascending);
                     System.out.println("----------");*/
-                    ((SortNode) pNode).addField(column.get(i), ascending,"N");
-                }
+                        ((SortNode) pNode).addField(column.get(i), ascending,"N");
+                    }
 
-                ((SortNode) pNode).addField("Field 2", "Y", "N");
+                    ((SortNode) pNode).addField("Field 2", "Y", "N");
+                } catch (NullPointerException | IndexOutOfBoundsException invalidData){
+                    System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
+                }
                 break;
             case "MergeJoin":
                 pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
                 break;
             case "GroupBy":
                 pNode = new GroupByNode(name, type);
-                HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
-                HashMap<String, ArrayList<String>> operations = tNode.getTableInfo().get(1);
+                try {
+                    HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
+                    HashMap<String, ArrayList<String>> operations = tNode.getTableInfo().get(1);
                 /*System.out.println(groupBys);
                 System.out.println(operations);*/
-                ArrayList<String> inputs = groupBys.get("INPUT_COLUMN");
+                    ArrayList<String> inputs = groupBys.get("INPUT_COLUMN");
 
-                ArrayList<String> outputs = operations.get("OUTPUT_COLUMN");
-                ArrayList<String> inputCol = operations.get("INPUT_COLUMN");
-                ArrayList<String> function = operations.get("FUNCTION");
+                    ArrayList<String> outputs = operations.get("OUTPUT_COLUMN");
+                    ArrayList<String> inputCol = operations.get("INPUT_COLUMN");
+                    ArrayList<String> function = operations.get("FUNCTION");
 
-                for (String s : inputs){
-                    ((GroupByNode) pNode).addFieldToGroupBy(s);
-                }
+                    for (String s : inputs){
+                        ((GroupByNode) pNode).addFieldToGroupBy(s);
+                    }
 
-                for (int i = 0; i < outputs.size() ; i++){
-                    ((GroupByNode) pNode).addAggregateField(outputs.get(i), inputCol.get(0), function.get(i));
-                }
+                    for (int i = 0; i < outputs.size() ; i++){
+                        ((GroupByNode) pNode).addAggregateField(outputs.get(i), inputCol.get(0), function.get(i));
+                    }
 
 //                System.out.println(((GroupByNode) pNode).getFields().get(0).groupByFieldInfo);
-
-
+                } catch (NullPointerException | IndexOutOfBoundsException invalidData){
+                    System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
+                    pNode = new SortNode(name, type);
+                }
                 break;
             case "FilterRows":
                 pNode = new FilterNode(name, type);
