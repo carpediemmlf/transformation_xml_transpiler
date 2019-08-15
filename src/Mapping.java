@@ -51,7 +51,7 @@ public class Mapping {
     }
 
     // Muhammed is working on this.
-    public Graph<PentNode, DefaultEdge> outputGraph() {
+    public Graph<PentNode, DefaultEdge> getOutputGraph() {
         return pentOutputGraph;
     }
     public void map() {
