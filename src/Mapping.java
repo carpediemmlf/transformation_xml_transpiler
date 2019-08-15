@@ -247,8 +247,6 @@ public class Mapping {
                     System.out.println("----------");*/
                         ((SortNode) pNode).addField(column.get(i), ascending,"N");
                     }
-
-                    ((SortNode) pNode).addField("Field 2", "Y", "N");
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
                     System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
                 }
@@ -274,6 +272,7 @@ public class Mapping {
                     }
 
                     for (int i = 0; i < outputs.size() ; i++){
+                        String pentFunc = function.get(i).replace("count", "SUM");
                         ((GroupByNode) pNode).addAggregateField(outputs.get(i), inputCol.get(0), function.get(i).toUpperCase()); // different names
                     }
 
