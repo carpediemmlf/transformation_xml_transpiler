@@ -126,7 +126,6 @@ public class Mapping {
         }
     }
 
-
     // Helper methods.
     public static void writeStringToNewFile(String str, String fileName)
             throws IOException {
@@ -139,7 +138,6 @@ public class Mapping {
         talInputIterator = new TopologicalOrderIterator<TalNode, DefaultEdge>(talInputGraph);
     }
 
-
     // talend section to pentnodes in graph
 
     public Graph convertNode (TalNode tNode, String type) {
@@ -150,6 +148,12 @@ public class Mapping {
             PentNode previousNode = null;
             for (int i=0; i< arr.length ;i++){
                 PentNode node = createSinglePentNode(tNode, arr[i], i);
+                if (i == 0) {
+                    tNode.setHeadPentNode(node);
+                }
+                else if ((i== arr.length - 1)) {
+                    tNode.setTailPentNode(node);
+                }
                 pGraph.addVertex(node);
                 if (i != 0){
                     try{
@@ -162,7 +166,11 @@ public class Mapping {
             }
         }
         else {
-            pGraph.addVertex(createSinglePentNode(tNode,type, 0));
+            PentNode node = createSinglePentNode(tNode,type, 0)
+            pGraph.addVertex(node);
+            // Add head and tail
+            tNode.setHeadPentNode(node);
+            tNode.setTailPentNode(node);
         }
         System.out.println(pGraph);
         return pGraph;
@@ -281,7 +289,7 @@ public class Mapping {
     private Graph<PentNode, DefaultEdge> createGraph() {
         return GraphTypeBuilder.<PentNode,DefaultEdge>directed().allowingMultipleEdges(true).allowingSelfLoops(false).edgeClass(DefaultEdge.class).weighted(false).buildGraph();
     }
-
+    // https://jgrapht.org/javadoc/org/jgrapht/Graphs.html#addGraph-org.jgrapht.Graph-org.jgrapht.Graph-
     /*
     public static Graph<URI, DefaultEdge> createHrefGraph() throws URISyntaxException {
         Graph<URI, DefaultEdge> g = new DefaultDirectedGraph(DefaultEdge.class);
@@ -299,18 +307,29 @@ public class Mapping {
     }
      */
 
+    private void createVertexOnlyPentGraph() {
+        pentOutputGraph = createGraph();
+        instantiateTalTopologicalIterator();
+        while (talInputIterator.hasNext()){
+            TalNode node = (TalNode) talInputIterator.next();
+            if (mappingDict.containsKey(node.getType())){
+                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
+                // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
+                Graphs.addGraph(pentOutputGraph, tNodeGraph);
+                // System.out.println(finalPentGraph);
+            }
+        }
+    }
     public void iterate (Iterator it){
         Graph<PentNode, DefaultEdge> finalPentGraph = createGraph();
         while (it.hasNext()){
             TalNode node = (TalNode) it.next();
             if (mappingDict.containsKey(node.getType())){
                 Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
-//            WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
+                // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
                 Graphs.addGraph(finalPentGraph, tNodeGraph);
-
-//                System.out.println(finalPentGraph);
+                // System.out.println(finalPentGraph);
             }
-
         }
         WriteXMLFile writer = new WriteXMLFile(finalPentGraph);
     }
