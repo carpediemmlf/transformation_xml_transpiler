@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 public class Mapping {
     private GraphIterator<TalNode, DefaultEdge> talInputIterator;
 
+    private Graph<TalNode, DefaultEdge> talInputGraph;
+    private Graph<PentNode, DefaultEdge> pentOutputGraph;
     // Initialize static type dictionary.
     private static Map<String, String> mappingDict = new HashMap<String, String>();
     static {
@@ -35,13 +37,10 @@ public class Mapping {
     };
 
 
-    private Graph<TalNode, DefaultEdge> talInputGraph;
-    private Graph<PentNode, DefaultEdge> pentOutputGraph;
 
     // Constructors. Overloaded.
     Mapping() { }
     Mapping(Graph<TalNode, DefaultEdge> inputTalGraph) {
-
         talInputGraph = inputTalGraph;
         // Instantiate Iterator.
         instantiateTalTopologicalIterator();
@@ -49,8 +48,16 @@ public class Mapping {
 
     // Muhammed is working on this.
     public void map() {
+        // Generate PentNodes.
         while (talInputIterator.hasNext()) {
             System.out.println(((talInputIterator.next())).getType());
+            System.out.println("Node translated.");
+        }
+        instantiateTalTopologicalIterator();
+        // Fill in
+        while (talInputIterator.hasNext()) {
+            System.out.println(((talInputIterator.next())).getType());
+            System.out.println("Node translated.");
         }
     }
 

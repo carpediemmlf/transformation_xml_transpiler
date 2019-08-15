@@ -11,13 +11,52 @@ public class TalNode extends XMLNode {
     private String type;
     private HashMap<String, String> simpleInfo = new HashMap<>();
     private ArrayList<HashMap<String, ArrayList<String>>> tableInfo = new ArrayList<>();
-//    private HashMap<String, ArrayList<String>> tableInfo= new HashMap<>();
+
+    private PentNode headPentNode;
+    private PentNode tailPentNode;
+    private boolean headPentNodeSet = false;
+    private boolean tailPentNodeSet = false;
     private String fileName;
 
+    public void setHeadPentNode(PentNode inputHeadPentNode) {
+        headPentNode = inputHeadPentNode;
+        headPentNodeSet = true;
+    }
 
-    /*public void getMaps(String fileName) throws IOException, SAXException, ParserConfigurationException {
-        talendInfo = talInfo.getVertices(fileName);
-    }*/
+    public void setTailPentNode(PentNode inputTailPentNode) {
+        tailPentNode = inputTailPentNode;
+        tailPentNodeSet = true;
+    }
+
+    public PentNode getHeadPentNode() {
+        try {
+            if (headPentNodeSet) {
+                return headPentNode;
+            }
+            else {
+                throw new ExceptionInInitializerError("Head PentNode not set.");
+            }
+
+        } catch (ExceptionInInitializerError e) {
+            System.out.println(e.toString());
+        }
+        return null;
+    }
+
+    public PentNode getTailPentNode() {
+        try {
+            if (tailPentNodeSet) {
+                return tailPentNode;
+            }
+            else {
+                throw new ExceptionInInitializerError("Tail PentNode not set.");
+            }
+
+        } catch (ExceptionInInitializerError e) {
+            System.out.println(e.toString());
+        }
+        return null;
+    }
 
     protected TalNode(String name, String type) {
         this.name = name;
