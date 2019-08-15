@@ -44,7 +44,7 @@ public class Main {
 
         mapper.iterate(it);
 */
-        mapper.pentToDot(mapper.outputGraph(), "dotAndpsFiles/DEMOTALEND_0.1_translated.dot");
+        mapper.pentToDot(mapper.getOutputGraph(), "dotAndpsFiles/DEMOTALEND_0.1_translated.dot");
 
 
     }
