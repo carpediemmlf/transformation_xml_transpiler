@@ -26,10 +26,10 @@ public class Mapping {
     private static Map<String, String> mappingDict = new HashMap<String, String>();
     static {
         // One-to-one.
-        // mappingDict.put("", "MergeNode");
-        // mappingDict.put("", "SelectValuesNode");
-        // mappingDict.put("", "FilterNode");
-        mappingDict.put("tLogRow", "");
+        mappingDict.put("tMap", "MergeJoin");
+        // mappingDict.put("", "SelectValues");
+        // mappingDict.put("", "FilterRows");
+        mappingDict.put("tLogRow", "Dummy");
         mappingDict.put("tSortRow", "SortRows");
         mappingDict.put("tFileInputDelimited", "CsvInput");
         mappingDict.put("tAggregateSortedRow", "GroupBy");
