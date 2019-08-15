@@ -1,5 +1,0 @@
-digraph G {
-  tFileInputDelimited_1 [ label="tFileInputDelimited" ];
-  tFileOutputDelimited_1 [ label="tFileOutputDelimited" ];
-  tFileInputDelimited_1 -> tFileOutputDelimited_1;
-}

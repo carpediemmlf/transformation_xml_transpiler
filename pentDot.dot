@@ -1,5 +1,0 @@
-digraph G {
-  CSVInput [ label="CsvInput" ];
-  CSVOutput [ label="TextFileOutput" ];
-  CSVInput -> CSVOutput;
-}

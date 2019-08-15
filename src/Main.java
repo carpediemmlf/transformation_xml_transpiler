@@ -37,6 +37,7 @@ public class Main {
 
         Mapping mapper = new Mapping(talGrapher.getGraph());
         mapper.map();
+
 /*
         Iterator it = talGrapher.getGraph().vertexSet().iterator();
 
@@ -45,7 +46,5 @@ public class Main {
         mapper.iterate(it);
 */
         mapper.pentToDot(mapper.getOutputGraph(), "dotAndpsFiles/DEMOTALEND_0.1_translated.dot");
-
-
     }
 }
