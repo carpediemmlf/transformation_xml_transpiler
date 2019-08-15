@@ -323,6 +323,13 @@ public class WriteXMLFile {
                         refNode.appendChild(inputNode);
                     }
                     break;
+//                case "Dummy":
+                default:
+                    documentI = getTemplateStepDoc("DummyTemplate");
+//                    System.out.println(vertex.getName());
+                    vertex.setType("Dummy");
+                    break;
+
             }
 
             NodeList nodes = documentI.getFirstChild().getChildNodes();

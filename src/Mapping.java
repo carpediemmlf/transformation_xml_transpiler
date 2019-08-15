@@ -259,12 +259,13 @@ public class Mapping {
                 try {
                     HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
                     HashMap<String, ArrayList<String>> operations = tNode.getTableInfo().get(1);
-                /*System.out.println(groupBys);
-                System.out.println(operations);*/
+                System.out.println(groupBys);
+                System.out.println(operations);
                     ArrayList<String> inputs = groupBys.get("INPUT_COLUMN");
 
                     ArrayList<String> outputs = operations.get("OUTPUT_COLUMN");
                     ArrayList<String> inputCol = operations.get("INPUT_COLUMN");
+                    ArrayList<String > ignoreNull = operations.get("IGNORE_NULL");
                     ArrayList<String> function = operations.get("FUNCTION");
 
                     for (String s : inputs){
@@ -272,8 +273,23 @@ public class Mapping {
                     }
 
                     for (int i = 0; i < outputs.size() ; i++){
-                        String pentFunc = function.get(i).replace("count", "SUM");
-                        ((GroupByNode) pNode).addAggregateField(outputs.get(i), inputCol.get(0), function.get(i).toUpperCase()); // different names
+                        String pentFunc = function.get(i);
+                        pentFunc = function.get(i).replace("sum", "SUM");
+                        pentFunc = function.get(i).replace("count(distinct)", "COUNT_DISTINCT");
+                        pentFunc = function.get(i).replace("min", "MIN");
+                        pentFunc = function.get(i).replace("max", "MAX");
+                        pentFunc = function.get(i).replace("avg", "AVERAGE");
+                        if (ignoreNull.get(i).equals("true")){
+                            pentFunc = function.get(i).replace("first", "FIRST").replace("last", "LAST");
+                            pentFunc = function.get(i).replace("count", "COUNT_ALL");
+
+                        } else{
+                            pentFunc = function.get(i).replace("first", "FIRST_INCL_NULL").replace("last", "LAST_INCL_NULL");
+                            pentFunc = function.get(i).replace("count", "COUNT_ANY");
+
+                        }
+
+                        ((GroupByNode) pNode).addAggregateField(outputs.get(i), inputCol.get(0), pentFunc); // different names
                     }
 
 //                System.out.println(((GroupByNode) pNode).getFields().get(0).groupByFieldInfo);
@@ -285,6 +301,9 @@ public class Mapping {
             case "FilterRows":
                 pNode = new FilterNode(name, type);
                 ((FilterNode) pNode).addCondition("Y","Field 1", "<", "Field 2");
+                break;
+            case "Dummy":
+                pNode = new PentNode(name, "Dummy");
                 break;
             default:
                 pNode = new PentNode(name,type);

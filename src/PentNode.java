@@ -68,10 +68,12 @@ public class PentNode extends XMLNode {
     // Setters
     public void setName(String name) {
         this.name = name;
+        simpleInfo.put("name", name);
     }
 
     public void setType(String type) {
         this.type = type;
+        simpleInfo.put("type", type);
     }
 
     public void setxLoc(String xLoc) {
