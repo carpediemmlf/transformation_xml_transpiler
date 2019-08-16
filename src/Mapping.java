@@ -18,7 +18,6 @@ import java.util.function.Supplier;
 
 public class Mapping {
     private GraphIterator<TalNode, DefaultEdge> talInputIterator;
-
     private Graph<TalNode, DefaultEdge> talInputGraph;
     private Graph<PentNode, DefaultEdge> pentOutputGraph;
     private boolean outputPentVerticesCreated = false;
