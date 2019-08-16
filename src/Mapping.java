@@ -63,6 +63,7 @@ public class Mapping {
                 throw new ExceptionInInitializerError("Output pent nodes not created.");
             } else {
                 appendEdgesToPentGraph();
+                System.out.println(getOutputGraph());
             }
         } catch (ExceptionInInitializerError e) {
              System.out.println(e.toString());
@@ -157,8 +158,9 @@ public class Mapping {
 
     public Graph convertNode (TalNode tNode, String type) {
         Graph<PentNode, DefaultEdge> pGraph = createGraph();
+//        System.out.println(type);
         System.out.println(type);
-        if (type.equals(null)){
+        if (type == null){
             System.out.println("gfvhbhj");
             type = "Dummy";
         }
@@ -199,6 +201,9 @@ public class Mapping {
     public PentNode createSinglePentNode (TalNode tNode, String type, int nameTag) {
         PentNode pNode = null;   // Possibly worth netting whole switch in try catch
         String name = tNode.getName();
+        if (type == null){
+            System.out.println("TCFVYGUBHINJMK");
+        }
         switch (type){
             case "CsvInput":
                 try{
@@ -258,17 +263,19 @@ public class Mapping {
                 }
                 break;
             case "MergeJoin":
+                pNode = new MergeNode(name, type);
                 try {
-
-                    pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
+//                    pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
                     /*((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
                     ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
 //                */
-
+                    String joinType = "INNER";
                     if (tNode.getSimpleInfo().get("USE_INNER_JOIN").equals("true")){
-                        String joinType = "INNER";
+                        joinType = "INNER";
+                        ((MergeNode) pNode).setJoin_type(joinType);
                     } else {
-                        String joinType = "FULL OUTER";
+                        joinType = "FULL OUTER";
+                        ((MergeNode) pNode).setJoin_type(joinType);
                     }
 
 //                    HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
@@ -283,16 +290,13 @@ public class Mapping {
                     }
                     int num = 1;
                     for (TalNode t : Graphs.predecessorListOf(talInputGraph, tNode)){
-                        System.out.println(t.getTailPentNode().getName());
+//                        System.out.println(t.getTailPentNode().getName());
                         String step = "step"+num;
-                        System.out.println(step);
+//                        System.out.println(step);
                         pNode.getSimpleInfo().put(step,t.getTailPentNode().getName());
                     }
-
-
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
                     System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
-                    pNode = new MergeNode(name, type);
                 }
                 break;
             case "GroupBy":
@@ -386,11 +390,17 @@ public class Mapping {
         instantiateTalTopologicalIterator();
         while (talInputIterator.hasNext()){
             TalNode node = (TalNode) talInputIterator.next();
+            /*System.out.println(node.getType());
+            System.out.println("Mapped - "+mappingDict.get(node.getType()));*/
             if (mappingDict.containsKey(node.getType())){
                 Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
                 // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
                 Graphs.addGraph(pentOutputGraph, tNodeGraph);
                 // System.out.println(finalPentGraph);
+            } else{
+                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ "Dummy");
+                // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
+                Graphs.addGraph(pentOutputGraph, tNodeGraph);
             }
         }
         outputPentVerticesCreated = true;
@@ -405,17 +415,22 @@ public class Mapping {
             }
         }
     }
-    public void iterate (Iterator it){
-        Graph<PentNode, DefaultEdge> finalPentGraph = createGraph();
-        while (it.hasNext()){
-            TalNode node = (TalNode) it.next();
-            if (mappingDict.containsKey(node.getType())){
-                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
-                // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
-                Graphs.addGraph(finalPentGraph, tNodeGraph);
-                // System.out.println(finalPentGraph);
-            }
-        }
-        WriteXMLFile writer = new WriteXMLFile(finalPentGraph);
-    }
+//    public void iterate (Iterator it){
+//        Graph<PentNode, DefaultEdge> finalPentGraph = createGraph();
+//        while (it.hasNext()){
+//            TalNode node = (TalNode) it.next();
+//            if (mappingDict.containsKey(node.getType())){
+//                System.out.println(node.getType());
+//                System.out.println("Mapped - "+mappingDict.get(node.getType()));
+//                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
+//                // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
+//                Graphs.addGraph(finalPentGraph, tNodeGraph);
+//                // System.out.println(finalPentGraph);
+//            }
+//            else{
+//
+//            }
+//        }
+//        WriteXMLFile writer = new WriteXMLFile(finalPentGraph);
+//    }
 }
