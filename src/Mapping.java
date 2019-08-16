@@ -26,16 +26,16 @@ public class Mapping {
     private static Map<String, String> mappingDict = new HashMap<String, String>();
     static {
         // One-to-one.
-        mappingDict.put("tMap", "MergeJoin");
+        mappingDict.put("tJoin", "MergeJoin");
         // mappingDict.put("", "SelectValues");
         // mappingDict.put("", "FilterRows");
-        mappingDict.put("tLogRow", "Dummy");
+        mappingDict.put("tLogRow", "");
         mappingDict.put("tSortRow", "SortRows");
         mappingDict.put("tFileInputDelimited", "CsvInput");
         mappingDict.put("tAggregateSortedRow", "GroupBy");
         mappingDict.put("tFileOutputDelimited", "TextFileOutput");
         // One-to-two.
-        // mappingDict.put("a", "A_D");
+        // mappingDict.put("tMap", "MergeJoin_FilterRows");
         // mappingDict.put("a", "A");
         // mappingDict.put("a", "A");
     };
