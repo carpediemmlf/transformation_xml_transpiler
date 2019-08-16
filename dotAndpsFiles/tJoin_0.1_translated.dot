@@ -1,0 +1,11 @@
+digraph G {
+  tRowGenerator_2 [ label="" ];
+  tRowGenerator_1 [ label="" ];
+  tJoin_1 [ label="MergeJoin" ];
+  tLogRow_1 [ label="" ];
+  tLogRow_2 [ label="" ];
+  tRowGenerator_2 -> tJoin_1;
+  tRowGenerator_1 -> tJoin_1;
+  tJoin_1 -> tLogRow_1;
+  tJoin_1 -> tLogRow_2;
+}
