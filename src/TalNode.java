@@ -38,7 +38,6 @@ public class TalNode extends XMLNode {
             else {
                 throw new ExceptionInInitializerError("Head PentNode not set.");
             }
-
         } catch (ExceptionInInitializerError e) {
             System.out.println(e.toString());
         }

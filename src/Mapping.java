@@ -29,18 +29,18 @@ public class Mapping {
         mappingDict.put("tJoin", "MergeJoin");
         // mappingDict.put("", "SelectValues");
         // mappingDict.put("", "FilterRows");
-        mappingDict.put("tLogRow", "");
+        // mappingDict.put("tRowGenerator", "");
+        // mappingDict.put("tLogRow", "");
         mappingDict.put("tSortRow", "SortRows");
         mappingDict.put("tFileInputDelimited", "CsvInput");
         mappingDict.put("tAggregateSortedRow", "GroupBy");
         mappingDict.put("tFileOutputDelimited", "TextFileOutput");
         // One-to-two.
-        // mappingDict.put("tMap", "MergeJoin_FilterRows");
+        // mappingDict.put("
+        // tMap", "MergeJoin_FilterRows");
         // mappingDict.put("a", "A");
         // mappingDict.put("a", "A");
     };
-
-
 
     // Constructors. Overloaded.
     Mapping() { }
@@ -54,6 +54,7 @@ public class Mapping {
     public Graph<PentNode, DefaultEdge> getOutputGraph() {
         return pentOutputGraph;
     }
+
     public void map() {
         createVerticesOnlyPentGraph();
         try {
@@ -372,7 +373,6 @@ public class Mapping {
             }
         }
     }
-
     public void iterate (Iterator it){
         Graph<PentNode, DefaultEdge> finalPentGraph = createGraph();
         while (it.hasNext()){
