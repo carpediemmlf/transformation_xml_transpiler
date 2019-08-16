@@ -335,7 +335,7 @@ public class Mapping {
                     }
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
                     System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
-                    pNode = new SortNode(name, type);
+                    pNode = new GroupByNode(name, type);
                 }
                 break;
             case "FilterRows":

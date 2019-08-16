@@ -33,8 +33,8 @@ public class Main {
 
         // WriteXMLFile writer = new WriteXMLFile(grapher.getGraph());
 
-        TalToGraph talGrapher = new TalToGraph("talendXML/tJoin_0.1.item");
-
+        TalToGraph talGrapher = new TalToGraph("talendXML/DEMOTALEND_0.1.item");
+        System.out.println(talGrapher.getGraph());
         Mapping mapper = new Mapping(talGrapher.getGraph());
         mapper.map();
 /*
@@ -45,7 +45,7 @@ public class Main {
         mapper.iterate(it);
 */
 //      System.out.println(mapper.getOutputGraph());
-        mapper.pentToDot(mapper.getOutputGraph(), "dotAndpsFiles/tJoin_0.1_translated.dot");
+//        mapper.pentToDot(mapper.getOutputGraph(), "dotAndpsFiles/tJoin_0.1_translated.dot");
 
         WriteXMLFile writer = new WriteXMLFile(mapper.getOutputGraph());
 

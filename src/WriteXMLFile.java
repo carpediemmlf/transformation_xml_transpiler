@@ -112,7 +112,6 @@ public class WriteXMLFile {
                         Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(43);
                         refNode.appendChild(inputNode);
                     }
-
                     break;
                 case "SelectValues":
                     documentI = getTemplateStepDoc("selectValuesStep");
