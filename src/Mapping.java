@@ -16,13 +16,35 @@ import java.util.*;
 import java.net.MalformedURLException;
 import java.util.function.Supplier;
 
+/**
+ *
+ *  Map input type XML into output type XML.*/
+
 public class Mapping {
+    /**
+     * Iterator for iterating through the whole input talGraph.
+     */
     private GraphIterator<TalNode, DefaultEdge> talInputIterator;
+    /**
+     * Input TalGraph.
+     */
     private Graph<TalNode, DefaultEdge> talInputGraph;
+    /**
+     * Output PentGraph.
+     */
     private Graph<PentNode, DefaultEdge> pentOutputGraph;
+    /**
+     * Flag indicating whether the output Pent graph vertices have been created.
+     */
     private boolean outputPentVerticesCreated = false;
+    /**
+     * FLag indicating whether the output Pent graph edges have been created.
+     */
     private boolean isOutputPentEdgesCreated = false;
     // Initialize static type dictionary.
+    /**
+     * Static dictionary holding mapping relation between Talend and Pentaho vertice types,including  1-1, 1-2 and 2-1.
+     */
     private static Map<String, String> mappingDict = new HashMap<String, String>();
     static {
         // One-to-one.
@@ -42,13 +64,25 @@ public class Mapping {
     };
 
     // Constructors. Overloaded.
-    Mapping() { }
-    Mapping(Graph<TalNode, DefaultEdge> inputTalGraph) {
+
+    /**
+     * Default constructor.
+     */
+    public Mapping() { }
+
+    /**
+     * Constructor requiring an input TalGraph.
+     * @param inputTalGraph TalGraph from the talend .item file.
+     */
+    public Mapping(Graph<TalNode, DefaultEdge> inputTalGraph) {
         talInputGraph = inputTalGraph;
         // Instantiate Iterator.
         instantiateTalTopologicalIterator();
     }
 
+    /**
+     * Conduct the mapping of the XML file.
+     */
     public void map() {
         createVerticesOnlyPentGraph();
         try {

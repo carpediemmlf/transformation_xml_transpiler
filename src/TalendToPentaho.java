@@ -23,10 +23,10 @@ import java.util.Iterator;
 
 
 public class TalendToPentaho {
-
     public static void main (String [] args)
             throws URISyntaxException, ExportException, IOException, ParserConfigurationException, SAXException {
-        TalToGraph talGrapher = new TalToGraph("talendXML/DEMOTALEND_0.1.item");
+        String inputFileName = args[0];
+        TalToGraph talGrapher = new TalToGraph(inputFileName);
         System.out.println(talGrapher.getGraph());
         Mapping mapper = new Mapping(talGrapher.getGraph());
         mapper.map();
