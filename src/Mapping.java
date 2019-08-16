@@ -252,7 +252,15 @@ public class Mapping {
                 }
                 break;
             case "MergeJoin":
-                pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
+                try {
+                    pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
+                    /*((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
+                    ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
+//                */
+                } catch (NullPointerException | IndexOutOfBoundsException invalidData){
+                    System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
+                    pNode = new TextOutputNode(name, type);
+                }
                 break;
             case "GroupBy":
                 pNode = new GroupByNode(name, type);
@@ -308,6 +316,8 @@ public class Mapping {
             default:
                 pNode = new PentNode(name,type);
         }
+        pNode.setxLoc(tNode.getPosX());
+        pNode.setyLoc(tNode.getPosY());
         if (nameTag != 0){
             String newName = tNode.getName() + "(" + Integer.toString(nameTag) + ")";
 //            System.out.println(newName);

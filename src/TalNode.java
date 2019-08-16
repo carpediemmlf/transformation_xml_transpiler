@@ -9,6 +9,8 @@ import java.util.Iterator;
 public class TalNode extends XMLNode {
     private String name;
     private String type;
+    private String posX;
+    private String posY;
     private HashMap<String, String> simpleInfo = new HashMap<>();
     private ArrayList<HashMap<String, ArrayList<String>>> tableInfo = new ArrayList<>();
 
@@ -63,6 +65,18 @@ public class TalNode extends XMLNode {
         this.type = type;
         simpleInfo.put("name", name);
         simpleInfo.put("type", type);
+    }
+
+    public void setPosition (String posX, String posY){
+        this.posX = posX;
+        this.posY = posY;
+    }
+
+    public String getPosX() {
+        return posX;
+    }
+    public String getPosY() {
+        return posY;
     }
 
     public void setName(String name) {

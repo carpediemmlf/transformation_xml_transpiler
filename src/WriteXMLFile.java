@@ -349,6 +349,12 @@ public class WriteXMLFile {
                         }
                     }
                     else{
+                        if (nodes.item(i).getNodeName().equals("GUI")){
+                            Document guiDoc = getTemplateStepDoc("stepGuiTemplate");
+                            System.out.println(guiDoc.getFirstChild().getChildNodes().item(1).getNodeName());
+                            System.out.println(guiDoc.getFirstChild().getChildNodes().item(3).getNodeName());
+//                            guiDoc.getFirstChild().getChildNodes().item(1).setTextContent();
+                        }
                         /*System.out.println(nodes.item(i).getChildNodes().item(1).getNodeName());
                         System.out.println(nodes.item(i).getChildNodes().item(1).getChildNodes().getLength());*/
                         /*System.out.println(nodes.item(i).getNodeName());
