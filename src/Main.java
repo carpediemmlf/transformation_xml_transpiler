@@ -26,29 +26,10 @@ public class Main {
 
     public static void main (String [] args)
             throws URISyntaxException, ExportException, IOException, ParserConfigurationException, SAXException {
-
-        // PentahoToGraph grapher = new PentahoToGraph("WorkingEg.ktr");
-
-        // PentahoToGraph grapher = new PentahoToGraph("pentaho_input_output.ktr");
-
-        // WriteXMLFile writer = new WriteXMLFile(grapher.getGraph());
-
         TalToGraph talGrapher = new TalToGraph("talendXML/DEMOTALEND_0.1.item");
         System.out.println(talGrapher.getGraph());
         Mapping mapper = new Mapping(talGrapher.getGraph());
         mapper.map();
-/*
-        Iterator it = talGrapher.getGraph().vertexSet().iterator();
-
-        WriteXMLFile writer = new WriteXMLFile(mapper.convertNode(talGrapher.getGraph().vertexSet().iterator().next(), "CsvInput"));
-
-        mapper.iterate(it);
-*/
-//      System.out.println(mapper.getOutputGraph());
-//        mapper.pentToDot(mapper.getOutputGraph(), "dotAndpsFiles/tJoin_0.1_translated.dot");
-
         WriteXMLFile writer = new WriteXMLFile(mapper.getOutputGraph());
-
-
     }
 }
