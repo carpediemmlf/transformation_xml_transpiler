@@ -8,4 +8,5 @@
 - [x] IO: read input xml into lists of vertices (with type and id) and links (with type and id and source and targets).
 - [x] IO: output executable xml from intermediate representation by pre-defined templates of pentaho xml.
 - [x] IO: output class should be created
-- [ ] Mapping: writing an interpreter on input graph and output graph.
+- [x] Mapping: writing an interpreter on input graph and output graph.
+- [x] Compiled TalendToPentaho.jar file. Please make sure java11 is installed to run the .jar file. E.g. : java -jar TalendToPentaho.jar inputItem.item  make sure .jar file is in the same folder as the inputItem.item.
