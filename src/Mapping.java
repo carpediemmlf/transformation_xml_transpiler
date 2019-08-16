@@ -121,15 +121,15 @@ public class Mapping {
     }
 
 
-// Creates empty outputGraph.
-// Iterates through talend nodes and creates equivalent pentaho nodes (in an edgeless graph)
-// Adds those to the initial outputGraph
+    // Creates empty outputGraph.
+    // Iterates through talend nodes and creates equivalent pentaho nodes (in an edgeless graph)
+    // Adds those to the initial outputGraph
     private void createVerticesOnlyPentGraph() {
         pentOutputGraph = createGraph();
         instantiateTalTopologicalIterator();
         while (talInputIterator.hasNext()){
             TalNode node = (TalNode) talInputIterator.next();
-// If statement to convert any undefined type into Dummy
+            // If statement to convert any undefined type into Dummy
             if (mappingDict.containsKey(node.getType())){
                 Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, mappingDict.get(node.getType()));
                 Graphs.addGraph(pentOutputGraph, tNodeGraph);
@@ -212,7 +212,7 @@ public class Mapping {
     // Creates single pentNode given talend node and pentaho node type
     // nameTag is used to add a tag to name of nodes part of a one-many, in which they would be mapped the same name
     // Assumes certain data is provided, ie filename, sparatores ect
-    public PentNode createSinglePentNode (TalNode tNode, String type, int nameTag) {
+    private PentNode createSinglePentNode (TalNode tNode, String type, int nameTag) {
         PentNode pNode = null;   // Possibly worth netting whole switch in try catch
         String name = tNode.getName();
         switch (type){
