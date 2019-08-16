@@ -156,7 +156,11 @@ public class Mapping {
 
     public Graph convertNode (TalNode tNode, String type) {
         Graph<PentNode, DefaultEdge> pGraph = createGraph();
-
+        System.out.println(type);
+        if (type.equals(null)){
+            System.out.println("gfvhbhj");
+            type = "Dummy";
+        }
         if (type.contains("_")){
             String [] arr = type.split("_");
             PentNode previousNode = null;
