@@ -36,10 +36,9 @@ public class Mapping {
         mappingDict.put("tAggregateSortedRow", "GroupBy");
         mappingDict.put("tFileOutputDelimited", "TextFileOutput");
         // One-to-two.
-        // mappingDict.put("
         // tMap", "MergeJoin_FilterRows");
-        // mappingDict.put("a", "A");
-        // mappingDict.put("a", "A");
+        // mappingDict.put("a", "A_B)");
+        // mappingDict.put("a", "A_B");
     };
 
     // Constructors. Overloaded.
@@ -48,11 +47,6 @@ public class Mapping {
         talInputGraph = inputTalGraph;
         // Instantiate Iterator.
         instantiateTalTopologicalIterator();
-    }
-
-    // Muhammed is working on this.
-    public Graph<PentNode, DefaultEdge> getOutputGraph() {
-        return pentOutputGraph;
     }
 
     public void map() {
@@ -65,23 +59,16 @@ public class Mapping {
                 System.out.println(getOutputGraph());
             }
         } catch (ExceptionInInitializerError e) {
-             System.out.println(e.toString());
-            }
-        // Generate PentNodes.
-        // while (talInputIterator.hasNext()) {
-        //     System.out.println(((talInputIterator.next())).getType());
-        //     System.out.println("Node translated.");
-        // }
-        // instantiateTalTopologicalIterator();
-        // Fill in
-        // while (talInputIterator.hasNext()) {
-        //     System.out.println(((talInputIterator.next())).getType());
-        //     System.out.println("Node translated.");
-        // }
+            System.out.println(e.toString());
+        }
     }
 
-    // Use helper classes to define how vertices should be rendered,
-    // Adhering to the DOT language restrictions
+    public Graph<PentNode, DefaultEdge> getOutputGraph() {
+        return pentOutputGraph;
+    }
+
+// Use helper classes to define how vertices should be rendered,
+// Adhering to the DOT language restrictions
 
     public void pentToDot(Graph<PentNode, DefaultEdge> pentGraph, String fileName) {
         ComponentNameProvider<PentNode> vertexIdProvider = new ComponentNameProvider<PentNode>() {
@@ -100,10 +87,6 @@ public class Mapping {
 
         Writer writer = new StringWriter();
         try {
-            // writeStringToNewFile("", fileName);
-            // FileWriter fw = null;
-            // File file = new File(fileName);
-            // fw = new FileWriter(fileName);
             exporter.exportGraph(pentGraph, writer);
             writeStringToNewFile(writer.toString(), fileName);
 
@@ -129,10 +112,6 @@ public class Mapping {
 
         Writer writer = new StringWriter();
         try {
-            // writeStringToNewFile("", fileName);
-            // FileWriter fw = null;
-            // File file = new File(fileName);
-            // fw = new FileWriter(fileName);
             exporter.exportGraph(talGraph, writer);
             writeStringToNewFile(writer.toString(), fileName);
 
@@ -141,8 +120,41 @@ public class Mapping {
         }
     }
 
-    // Helper methods.
-    public static void writeStringToNewFile(String str, String fileName)
+
+// Creates empty outputGraph.
+// Iterates through talend nodes and creates equivalent pentaho nodes (in an edgeless graph)
+// Adds those to the initial outputGraph
+    private void createVerticesOnlyPentGraph() {
+        pentOutputGraph = createGraph();
+        instantiateTalTopologicalIterator();
+        while (talInputIterator.hasNext()){
+            TalNode node = (TalNode) talInputIterator.next();
+// If statement to convert any undefined type into Dummy
+            if (mappingDict.containsKey(node.getType())){
+                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, mappingDict.get(node.getType()));
+                Graphs.addGraph(pentOutputGraph, tNodeGraph);
+            } else{
+                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node,"Dummy");
+                Graphs.addGraph(pentOutputGraph, tNodeGraph);
+            }
+        }
+        outputPentVerticesCreated = true;
+    }
+
+// Lingfa - please describe
+    private void appendEdgesToPentGraph() {
+        instantiateTalTopologicalIterator();
+        while (talInputIterator.hasNext()){
+            TalNode node = (TalNode) talInputIterator.next();
+            List<TalNode> predecessors = Graphs.predecessorListOf(talInputGraph, node);
+            for (TalNode pred : predecessors) {
+                pentOutputGraph.addEdge(pred.getTailPentNode(), node.getHeadPentNode());
+            }
+        }
+    }
+
+// Helper methods.
+    private static void writeStringToNewFile(String str, String fileName)
             throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
         writer.write(str);
@@ -153,16 +165,16 @@ public class Mapping {
         talInputIterator = new TopologicalOrderIterator<TalNode, DefaultEdge>(talInputGraph);
     }
 
-    // talend section to pentnodes in graph
+// talend section to pentnodes in graph
 
-    public Graph convertNode (TalNode tNode, String type) {
+    // Takes in a talend node and the type/ types of pentaho that it is mapped to. (which should be made) - in order
+    private Graph convertNode (TalNode tNode, String type) {
         Graph<PentNode, DefaultEdge> pGraph = createGraph();
-//        System.out.println(type);
-        System.out.println(type);
-        if (type == null){
-            System.out.println("gfvhbhj");
-            type = "Dummy";
-        }
+        /* One to many relation!
+         If talend node is mapped to multiple pentaho nodes, they are delimited by "_"
+         They are split and in a loop created
+         A pointer to the previous node allows edges to be made as nodes are made
+         They first and last nodes are set as the head and tail respectively*/
         if (type.contains("_")){
             String [] arr = type.split("_");
             PentNode previousNode = null;
@@ -193,29 +205,27 @@ public class Mapping {
             tNode.setTailPentNode(node);
         }
         System.out.println(pGraph);
+        // returns graph corresponding to specific talend node
         return pGraph;
     }
 
+    // Creates single pentNode given talend node and pentaho node type
+    // nameTag is used to add a tag to name of nodes part of a one-many, in which they would be mapped the same name
     // Assumes certain data is provided, ie filename, sparatores ect
     public PentNode createSinglePentNode (TalNode tNode, String type, int nameTag) {
         PentNode pNode = null;   // Possibly worth netting whole switch in try catch
         String name = tNode.getName();
-        if (type == null){
-            System.out.println("TCFVYGUBHINJMK");
-        }
         switch (type){
             case "CsvInput":
                 try{
-                    pNode = new CSVInputNode(name, type, tNode.getSimpleInfo().get("FILENAME")/*"DUMMY: filename"*/);
-//                System.out.println(pNode.getSimpleInfo().get("filename"));
-//                tNode.getSimpleInfo().remove("FIELDSEPARATOR");
+                    pNode = new CSVInputNode(name, type, tNode.getSimpleInfo().get("FILENAME"));
+                    // set separator and enclosure
                     ((CSVInputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
                     ((CSVInputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
-//                System.out.println(((CSVInputNode) pNode).getSeparator() + ((CSVInputNode) pNode).getEnclosure());
-
+                    // getting field data
                     HashMap<String, ArrayList<String>> selectTable = tNode.getTableInfo().get(0);
                     ArrayList<String> fields = selectTable.get("SCHEMA_COLUMN");
-
+                    // setting fields in penNode
                     for (String field : fields){
                         ((CSVInputNode) pNode).addField(field);
                     }
@@ -226,35 +236,27 @@ public class Mapping {
                 break;
             case "TextFileOutput":
                 try {
-                    pNode = new TextOutputNode(name, type, tNode.getSimpleInfo().get("FILENAME")/*"filename55"*/);
+                    pNode = new TextOutputNode(name, type, tNode.getSimpleInfo().get("FILENAME"));
+                    // set separator and enclosure
                     ((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
                     ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
-                    //                System.out.println(((TextOutputNode) pNode).getSeparator() + ((TextOutputNode) pNode).getEnclosure());
-                    // NO FIELD DATA AVAILABLE TO TRANSFER
+
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
                     System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
                     pNode = new TextOutputNode(name, type);
                 }
                 break;
-            case "SelectValues":
-                pNode = new SelectValuesNode(name, type);
-                ((SelectValuesNode) pNode).addField("Field 1", "Field One");
-                break;
             case "SortRows":
                 pNode = new SortNode(name, type);
                 try {
+                    // getting seocnd level info
                     HashMap<String, ArrayList<String>> selectTable = tNode.getTableInfo().get(0);
-//                System.out.println(selectTable);
                     ArrayList<String> column = selectTable.get("COLNAME");
                     ArrayList<String> order = selectTable.get("ORDER");
 
                     for (int i=0 ; i< column.size() ; i++){
+                        // editing dialect and adding fields
                         String ascending = order.get(i).replace("asc", "Y").replace("desc", "N");
-//                    order.get(i) = order.get(i).replace("asc", "Y");
-//                    order.get(i).replace("desc", "N");
-                    /*System.out.println(column.get(i));
-                    System.out.println(ascending);
-                    System.out.println("----------");*/
                         ((SortNode) pNode).addField(column.get(i), ascending,"N");
                     }
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
@@ -264,11 +266,8 @@ public class Mapping {
             case "MergeJoin":
                 pNode = new MergeNode(name, type);
                 try {
-//                    pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
-                    /*((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
-                    ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
-//                */
-                    String joinType = "INNER";
+                    // setting join type based on provied info
+                    String joinType;
                     if (tNode.getSimpleInfo().get("USE_INNER_JOIN").equals("true")){
                         joinType = "INNER";
                         ((MergeNode) pNode).setJoin_type(joinType);
@@ -276,22 +275,20 @@ public class Mapping {
                         joinType = "FULL OUTER";
                         ((MergeNode) pNode).setJoin_type(joinType);
                     }
-
-//                    HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
+                    // getting key info
                     HashMap<String, ArrayList<String>> keys = tNode.getTableInfo().get(1);
                     ArrayList<String> inputCols = keys.get("INPUT_COLUMN");
                     ArrayList<String> lookupCols = keys.get("LOOKUP_COLUMN");
-//                    System.out.println(keys);
-
+                    // setting keys
                     for (int i = 0; i < inputCols.size(); i++){
                         ((MergeNode) pNode).addKey_1(inputCols.get(i));
                         ((MergeNode) pNode).addKey_1(lookupCols.get(i));
                     }
+                    // Use of edges to assume steps feeding into this step
+                    // Assume only 1 and 2, if more, they will be ignored (added to hashmap with step# tag)
                     int num = 1;
                     for (TalNode t : Graphs.predecessorListOf(talInputGraph, tNode)){
-//                        System.out.println(t.getTailPentNode().getName());
                         String step = "step"+num;
-//                        System.out.println(step);
                         pNode.getSimpleInfo().put(step,t.getTailPentNode().getName());
                     }
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
@@ -301,22 +298,23 @@ public class Mapping {
             case "GroupBy":
                 pNode = new GroupByNode(name, type);
                 try {
+                    // getting second level info
                     HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
                     HashMap<String, ArrayList<String>> operations = tNode.getTableInfo().get(1);
-                    /*System.out.println(groupBys);
-                    System.out.println(operations);*/
+                    // extracting groupBy info
                     ArrayList<String> inputs = groupBys.get("INPUT_COLUMN");
-
+                    // extracting operation info
                     ArrayList<String> outputs = operations.get("OUTPUT_COLUMN");
                     ArrayList<String> inputCol = operations.get("INPUT_COLUMN");
                     ArrayList<String > ignoreNull = operations.get("IGNORE_NULL");
                     ArrayList<String> function = operations.get("FUNCTION");
-
+                    // setting fields to groupBy
                     for (String s : inputs){
                         ((GroupByNode) pNode).addFieldToGroupBy(s);
                     }
-
+                    // setting aggregate info
                     for (int i = 0; i < outputs.size() ; i++){
+                        // mapping talend dialect to pentaho
                         String pentFunc = function.get(i);
                         pentFunc = function.get(i).replace("sum", "SUM");
                         pentFunc = function.get(i).replace("count(distinct)", "COUNT_DISTINCT");
@@ -332,11 +330,9 @@ public class Mapping {
                             pentFunc = function.get(i).replace("count", "COUNT_ANY");
 
                         }
-
-                        ((GroupByNode) pNode).addAggregateField(outputs.get(i), inputCol.get(0), pentFunc); // different names
+                        // add aggregate
+                        ((GroupByNode) pNode).addAggregateField(outputs.get(i), inputCol.get(0), pentFunc);
                     }
-
-//                System.out.println(((GroupByNode) pNode).getFields().get(0).groupByFieldInfo);
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
                     System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
                     pNode = new SortNode(name, type);
@@ -346,90 +342,29 @@ public class Mapping {
                 pNode = new FilterNode(name, type);
                 ((FilterNode) pNode).addCondition("Y","Field 1", "<", "Field 2");
                 break;
+            case "SelectValues":
+                pNode = new SelectValuesNode(name, type);
+                ((SelectValuesNode) pNode).addField("Field 1", "Field One");
+                break;
             case "Dummy":
                 pNode = new PentNode(name, "Dummy");
                 break;
             default:
                 pNode = new PentNode(name,type);
         }
+        // setting x and y from talend on all pentNodes
         pNode.setxLoc(tNode.getPosX());
         pNode.setyLoc(tNode.getPosY());
+        // if not one-to-one, tags added to name
         if (nameTag != 0){
             String newName = tNode.getName() + "(" + Integer.toString(nameTag) + ")";
-//            System.out.println(newName);
             pNode.setName(newName);
         }
-//        System.out.println("returning node : " + pNode.getName());
         return pNode;
     }
 
+    // Creates empty graph of pentNodes
     private Graph<PentNode, DefaultEdge> createGraph() {
         return GraphTypeBuilder.<PentNode,DefaultEdge>directed().allowingMultipleEdges(true).allowingSelfLoops(false).edgeClass(DefaultEdge.class).weighted(false).buildGraph();
     }
-
-    /*
-    public static Graph<URI, DefaultEdge> createHrefGraph() throws URISyntaxException {
-        Graph<URI, DefaultEdge> g = new DefaultDirectedGraph(DefaultEdge.class);
-        URI google = new URI("http://www.google.com");
-        URI wikipedia = new URI("http://www.wikipedia.org");
-        URI jgrapht = new URI("http://www.jgrapht.org");
-        g.addVertex(google);
-        g.addVertex(wikipedia);
-        g.addVertex(jgrapht);
-        g.addEdge(jgrapht, wikipedia);
-        g.addEdge(google, jgrapht);
-        g.addEdge(google, wikipedia);
-        g.addEdge(wikipedia, google);
-        return g;
-    }
-     */
-
-    private void createVerticesOnlyPentGraph() {
-        pentOutputGraph = createGraph();
-        instantiateTalTopologicalIterator();
-        while (talInputIterator.hasNext()){
-            TalNode node = (TalNode) talInputIterator.next();
-            /*System.out.println(node.getType());
-            System.out.println("Mapped - "+mappingDict.get(node.getType()));*/
-            if (mappingDict.containsKey(node.getType())){
-                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
-                // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
-                Graphs.addGraph(pentOutputGraph, tNodeGraph);
-                // System.out.println(finalPentGraph);
-            } else{
-                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ "Dummy");
-                // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
-                Graphs.addGraph(pentOutputGraph, tNodeGraph);
-            }
-        }
-        outputPentVerticesCreated = true;
-    }
-    private void appendEdgesToPentGraph() {
-        instantiateTalTopologicalIterator();
-        while (talInputIterator.hasNext()){
-            TalNode node = (TalNode) talInputIterator.next();
-            List<TalNode> predecessors = Graphs.predecessorListOf(talInputGraph, node);
-            for (TalNode pred : predecessors) {
-                pentOutputGraph.addEdge(pred.getTailPentNode(), node.getHeadPentNode());
-            }
-        }
-    }
-//    public void iterate (Iterator it){
-//        Graph<PentNode, DefaultEdge> finalPentGraph = createGraph();
-//        while (it.hasNext()){
-//            TalNode node = (TalNode) it.next();
-//            if (mappingDict.containsKey(node.getType())){
-//                System.out.println(node.getType());
-//                System.out.println("Mapped - "+mappingDict.get(node.getType()));
-//                Graph<PentNode, DefaultEdge> tNodeGraph = convertNode(node, /*"CsvInput_TextFileOutput"*/ mappingDict.get(node.getType()));
-//                // WriteXMLFile writer = new WriteXMLFile(convertNode(node, "CsvInput_TextFileOutput" /*mappingDict.get(node.getType()*/)));
-//                Graphs.addGraph(finalPentGraph, tNodeGraph);
-//                // System.out.println(finalPentGraph);
-//            }
-//            else{
-//
-//            }
-//        }
-//        WriteXMLFile writer = new WriteXMLFile(finalPentGraph);
-//    }
 }
