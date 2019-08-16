@@ -344,16 +344,25 @@ public class WriteXMLFile {
                         /*System.out.println(nodes.item(i).getNodeName());
                         System.out.println("yes");*/
                         if (vertex.getSimpleInfo().containsKey(variable)) {
-                            System.out.println("  IN IF WHICH CONTAINS INFO");
+//                            System.out.println("  IN IF WHICH CONTAINS INFO");
                             nodes.item(i).setTextContent(vertex.getSimpleInfo().get(variable));
                         }
                     }
                     else{
                         if (nodes.item(i).getNodeName().equals("GUI")){
                             Document guiDoc = getTemplateStepDoc("stepGuiTemplate");
-                            System.out.println(guiDoc.getFirstChild().getChildNodes().item(1).getNodeName());
-                            System.out.println(guiDoc.getFirstChild().getChildNodes().item(3).getNodeName());
-//                            guiDoc.getFirstChild().getChildNodes().item(1).setTextContent();
+                            /*System.out.println(guiDoc.getFirstChild().getChildNodes().item(1).getTextContent());
+                            System.out.println(guiDoc.getFirstChild().getChildNodes().item(3).getTextContent());*/
+                            guiDoc.getFirstChild().getChildNodes().item(1).setTextContent(vertex.getxLoc());
+                            guiDoc.getFirstChild().getChildNodes().item(3).setTextContent(vertex.getyLoc());
+
+                            Node guiNode = documentI.importNode(guiDoc.getFirstChild(),true);
+                            nodes.item(i).getParentNode().replaceChild(guiNode,nodes.item(i));
+
+                           /* Node stepNode = documentI.importNode(fieldDoc.getFirstChild(), true);
+//                        System.out.println(documentI.getChildNodes().item(0).getChildNodes().item(29));
+                            Node refNode = documentI.getChildNodes().item(0).getChildNodes().item(29);
+                            refNode.appendChild(stepNode);*/
                         }
                         /*System.out.println(nodes.item(i).getChildNodes().item(1).getNodeName());
                         System.out.println(nodes.item(i).getChildNodes().item(1).getChildNodes().getLength());*/
