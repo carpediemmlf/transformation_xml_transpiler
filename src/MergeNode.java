@@ -21,20 +21,11 @@ public class MergeNode extends PentNode {
         getSimpleInfo().put("key_1", key_1);
         getSimpleInfo().put("key_2", key_2);
     }
+    public MergeNode (String name, String type){
+        super(name,type);
+    }
 
     // getters
-    public String getJoin_type() {
-        return join_type;
-    }
-
-    public String getStep1() {
-        return step1;
-    }
-
-    public String getStep2() {
-        return step2;
-    }
-
     public ArrayList<String> getKey_1() {
         return key_1;
     }

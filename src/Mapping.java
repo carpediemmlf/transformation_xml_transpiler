@@ -1,3 +1,4 @@
+import jdk.swing.interop.SwingInterOpUtils;
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.generate.*;
@@ -219,7 +220,7 @@ public class Mapping {
                     pNode = new TextOutputNode(name, type, tNode.getSimpleInfo().get("FILENAME")/*"filename55"*/);
                     ((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
                     ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
-//                System.out.println(((TextOutputNode) pNode).getSeparator() + ((TextOutputNode) pNode).getEnclosure());
+                    //                System.out.println(((TextOutputNode) pNode).getSeparator() + ((TextOutputNode) pNode).getEnclosure());
                     // NO FIELD DATA AVAILABLE TO TRANSFER
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
                     System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
@@ -253,13 +254,40 @@ public class Mapping {
                 break;
             case "MergeJoin":
                 try {
+
                     pNode = new MergeNode(name, type, "DUMMY: joinType", "DUMMY: step1", "DUMMY: step2", "DUMMY: key1", "DUMMY: key2");
                     /*((TextOutputNode) pNode).setSeparator(tNode.getSimpleInfo().get("FIELDSEPARATOR").split("/*")[1]);
                     ((TextOutputNode) pNode).setEnclosure(tNode.getSimpleInfo().get("TEXT_ENCLOSURE").split("/*")[1]);
 //                */
+
+                    if (tNode.getSimpleInfo().get("USE_INNER_JOIN").equals("true")){
+                        String joinType = "INNER";
+                    } else {
+                        String joinType = "FULL OUTER";
+                    }
+
+//                    HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
+                    HashMap<String, ArrayList<String>> keys = tNode.getTableInfo().get(1);
+                    ArrayList<String> inputCols = keys.get("INPUT_COLUMN");
+                    ArrayList<String> lookupCols = keys.get("LOOKUP_COLUMN");
+//                    System.out.println(keys);
+
+                    for (int i = 0; i < inputCols.size(); i++){
+                        ((MergeNode) pNode).addKey_1(inputCols.get(i));
+                        ((MergeNode) pNode).addKey_1(lookupCols.get(i));
+                    }
+                    int num = 1;
+                    for (TalNode t : Graphs.predecessorListOf(talInputGraph, tNode)){
+                        System.out.println(t.getTailPentNode().getName());
+                        String step = "step"+num;
+                        System.out.println(step);
+                        pNode.getSimpleInfo().put(step,t.getTailPentNode().getName());
+                    }
+
+
                 } catch (NullPointerException | IndexOutOfBoundsException invalidData){
                     System.out.println("Error occured in making penaho nodes due to invalid or insufficient data");
-                    pNode = new TextOutputNode(name, type);
+                    pNode = new MergeNode(name, type);
                 }
                 break;
             case "GroupBy":
@@ -267,8 +295,8 @@ public class Mapping {
                 try {
                     HashMap<String, ArrayList<String>> groupBys = tNode.getTableInfo().get(0);
                     HashMap<String, ArrayList<String>> operations = tNode.getTableInfo().get(1);
-                System.out.println(groupBys);
-                System.out.println(operations);
+                    /*System.out.println(groupBys);
+                    System.out.println(operations);*/
                     ArrayList<String> inputs = groupBys.get("INPUT_COLUMN");
 
                     ArrayList<String> outputs = operations.get("OUTPUT_COLUMN");

@@ -344,15 +344,15 @@ public class WriteXMLFile {
                         /*System.out.println(nodes.item(i).getNodeName());
                         System.out.println("yes");*/
                         if (vertex.getSimpleInfo().containsKey(variable)) {
-                            System.out.println("  IN IF WHICH CONTAINS INFO");
+//                            System.out.println("  IN IF WHICH CONTAINS INFO");
                             nodes.item(i).setTextContent(vertex.getSimpleInfo().get(variable));
                         }
                     }
                     else{
                         if (nodes.item(i).getNodeName().equals("GUI")){
                             Document guiDoc = getTemplateStepDoc("stepGuiTemplate");
-                            System.out.println(guiDoc.getFirstChild().getChildNodes().item(1).getTextContent());
-                            System.out.println(guiDoc.getFirstChild().getChildNodes().item(3).getTextContent());
+                            /*System.out.println(guiDoc.getFirstChild().getChildNodes().item(1).getTextContent());
+                            System.out.println(guiDoc.getFirstChild().getChildNodes().item(3).getTextContent());*/
                             guiDoc.getFirstChild().getChildNodes().item(1).setTextContent(vertex.getxLoc());
                             guiDoc.getFirstChild().getChildNodes().item(3).setTextContent(vertex.getyLoc());
 
