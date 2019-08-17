@@ -1,3 +1,5 @@
+package com.hitachivantara.talendtopentaho.nodetype;
+
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -59,7 +61,7 @@ public class TalNode extends XMLNode {
         return null;
     }
 
-    protected TalNode(String name, String type) {
+    public TalNode(String name, String type) {
         this.name = name;
         this.type = type;
         simpleInfo.put("name", name);

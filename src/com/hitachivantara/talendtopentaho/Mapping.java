@@ -1,3 +1,8 @@
+package com.hitachivantara.talendtopentaho;
+
+import com.hitachivantara.talendtopentaho.io.*;
+import com.hitachivantara.talendtopentaho.nodetype.*;
+
 import jdk.swing.interop.SwingInterOpUtils;
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
@@ -7,6 +12,8 @@ import org.jgrapht.io.*;
 import org.jgrapht.traverse.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
+
+
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -97,6 +104,10 @@ public class Mapping {
         }
     }
 
+    /**
+     * getter method for retrieving the pentaho graph.
+     * @return returns the mapped Pentaho Graph
+     */
     public Graph<PentNode, DefaultEdge> getOutputGraph() {
         return pentOutputGraph;
     }
@@ -104,6 +115,11 @@ public class Mapping {
 // Use helper classes to define how vertices should be rendered,
 // Adhering to the DOT language restrictions
 
+    /**
+     * output a PentGraph to dot file.
+     * @param pentGraph PentGraph to be converted into .dot format
+     * @param fileName out put file path (including name)
+     */
     public void pentToDot(Graph<PentNode, DefaultEdge> pentGraph, String fileName) {
         ComponentNameProvider<PentNode> vertexIdProvider = new ComponentNameProvider<PentNode>() {
             public String getName(PentNode pentNode) {
@@ -129,6 +145,11 @@ public class Mapping {
         }
     }
 
+    /**
+     * output a PentGraph to dot file.
+     * @param talGraph input TalLend graph to be converted.
+     * @param fileName output file path including name.
+     */
     public void talToDot(Graph<TalNode, DefaultEdge> talGraph, String fileName) {
         ComponentNameProvider<TalNode> vertexIdProvider = new ComponentNameProvider<TalNode>() {
             public String getName(TalNode talNode) {

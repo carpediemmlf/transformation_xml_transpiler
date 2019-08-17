@@ -1,3 +1,5 @@
+package com.hitachivantara.talendtopentaho.nodetype;
+
 public class XMLNode {
 
     public String getType() {

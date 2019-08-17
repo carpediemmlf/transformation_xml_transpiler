@@ -1,3 +1,8 @@
+package com.hitachivantara.talendtopentaho.io;
+
+import com.hitachivantara.talendtopentaho.io.*;
+import com.hitachivantara.talendtopentaho.nodetype.*;
+
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.builder.GraphTypeBuilder;

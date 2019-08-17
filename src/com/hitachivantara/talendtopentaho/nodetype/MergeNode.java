@@ -1,3 +1,5 @@
+package com.hitachivantara.talendtopentaho.nodetype;
+
 import java.util.ArrayList;
 
 public class MergeNode extends PentNode {

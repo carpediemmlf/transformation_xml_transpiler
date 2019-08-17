@@ -1,24 +1,30 @@
+package com.hitachivantara.talendtopentaho.nodetype;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CSVInputNode extends PentNode {
+public class TextOutputNode extends PentNode {
 
     private String filename;
+    private String extension;
     private String separator = null;
     private String enclosure = null;
-    private ArrayList<CSVInputField> fields = new ArrayList<>();
+    private ArrayList<TextOutputField> fields = new ArrayList<>();
+    private HashMap<String, String> fileInfo = new HashMap<>();
 
-    public CSVInputNode (String name, String type, String filename){
+    public TextOutputNode (String name, String type, String filename){
         super(name,type);
         this.filename= filename;
-        getSimpleInfo().put("filename", filename);
+        fileInfo.put("name", filename);
     }
-    public CSVInputNode (String name, String type){
+
+    public TextOutputNode (String name, String type){
         super(name,type);
     }
+
     // setters
     public void addField (String fieldName){
-        CSVInputField field = new CSVInputField(fieldName);
+            TextOutputField field = new TextOutputField(fieldName);
         fields.add(field);
     }
 
@@ -32,6 +38,14 @@ public class CSVInputNode extends PentNode {
         getSimpleInfo().put("enclosure", enclosure);
     }
 
+    public void setExtension(String extension) {
+        this.extension = extension;
+        fileInfo.put("extension", extension);
+    }
+
+    public void setAppend (String append){
+        fileInfo.put("append", append);
+    }
     // getters
 
     public String getFilename() {
@@ -46,12 +60,16 @@ public class CSVInputNode extends PentNode {
         return enclosure;
     }
 
-    public ArrayList<CSVInputField> getFields() {
+    public ArrayList<TextOutputField> getFields() {
         return fields;
     }
 
+    public HashMap<String, String> getFileInfo() {
+        return fileInfo;
+    }
+
     ///
-    public class CSVInputField {
+    public class TextOutputField {
 
         private String name;
         private String type;
@@ -60,12 +78,13 @@ public class CSVInputNode extends PentNode {
         private String decimal;
         private String group;
         private String length;
+        private String nullif;
         private String precision;
         private String trim_type;
 
         HashMap<String,String> fieldInfo = new HashMap<>();
 
-        public CSVInputField (String name){
+        public TextOutputField (String name){
             this.name = name;
             fieldInfo.put("name", name);
         }

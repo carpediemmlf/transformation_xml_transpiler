@@ -1,6 +1,7 @@
-//TODO
-// - Perhaps split up distance in to smaller methods
-// - Implement the improvements discussed with Lingfa
+package com.hitachivantara.talendtopentaho.treeeditdistance;
+
+import com.hitachivantara.talendtopentaho.io.*;
+import com.hitachivantara.talendtopentaho.nodetype.*;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsUndirectedGraph;

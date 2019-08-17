@@ -1,3 +1,5 @@
+package com.hitachivantara.talendtopentaho.nodetype;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,7 +12,7 @@ public class PentNode extends XMLNode {
 
     ////           WHERE ARE WE DEALING WITH SIMILAR NAMES
 
-    protected PentNode (String name, String type){
+    public PentNode(String name, String type){
         this.name=name;
         this.type=type;
         simpleInfo.put("name",name);

@@ -1,3 +1,8 @@
+package com.hitachivantara.talendtopentaho.io;
+
+import com.hitachivantara.talendtopentaho.io.*;
+import com.hitachivantara.talendtopentaho.nodetype.*;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
