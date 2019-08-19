@@ -36,5 +36,6 @@ public class TalendToPentaho {
         Mapping mapper = new Mapping(talGrapher.getGraph());
         mapper.map();
         WriteXMLFile writer = new WriteXMLFile(mapper.getOutputGraph());
+        writer.writeXML();
     }
 }

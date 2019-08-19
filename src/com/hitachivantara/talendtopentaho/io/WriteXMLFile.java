@@ -35,7 +35,7 @@ public class WriteXMLFile {
 
         try {
             // created xml document from template of empty pentaho transformation, adds vertices then edges
-            InputStream inputStreamPenTemplate = new FileInputStream("PentahoTemplates\\EmptyTransformation.ktr");
+            InputStream inputStreamPenTemplate = new FileInputStream("EmptyTransformation.ktr");
 
             DocumentBuilderFactory factoryP = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builderP = factoryP.newDocumentBuilder();
@@ -294,7 +294,7 @@ public class WriteXMLFile {
     private Document getTemplateStepDoc (String pathname) throws Exception{
         Document documentI;
         try { // setting up template document
-            InputStream inputStream = new FileInputStream(new File("PentahoTemplates\\"+pathname));
+            InputStream inputStream = new FileInputStream(new File(pathname));
 
             DocumentBuilderFactory factoryI = DocumentBuilderFactory.newDefaultInstance();
             DocumentBuilder builderI = factoryI.newDocumentBuilder();
@@ -324,7 +324,7 @@ public class WriteXMLFile {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource domSource = new DOMSource(translatedDoc);
-            StreamResult streamResult = new StreamResult(new File("translated.xml"));
+            StreamResult streamResult = new StreamResult(new File("Translated.ktr"));
             transformer.transform(domSource,streamResult);
         } catch (TransformerConfigurationException TCE){
             System.out.println(TCE.getMessage());
