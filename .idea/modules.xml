@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/java_dom.iml" filepath="$PROJECT_DIR$/java_dom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TalendToPentaho.iml" filepath="$PROJECT_DIR$/TalendToPentaho.iml" />
     </modules>
   </component>
 </project>
