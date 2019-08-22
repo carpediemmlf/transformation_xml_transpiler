@@ -1,0 +1,12 @@
+<field>
+    <name></name>
+    <type>String</type>
+    <format/>
+    <currency/>
+    <decimal/>
+    <group/>
+    <nullif/>
+    <trim_type>none</trim_type>
+    <length>24</length>
+    <precision>-1</precision>
+</field>

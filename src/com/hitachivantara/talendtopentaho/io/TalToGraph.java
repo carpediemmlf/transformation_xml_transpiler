@@ -21,11 +21,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+
+/**
+ * Convert talend .item to intermediate graph representation.
+ */
 public class TalToGraph {
 
     private Document document;
     Graph<TalNode, DefaultEdge> graph;
 
+    /**
+     * Create Talend graph from input file with specified filepath.
+     * @param talendXMLName Path for input Talend file.
+     */
     public TalToGraph(String talendXMLName){
 
         try {
@@ -56,7 +64,7 @@ public class TalToGraph {
         return GraphTypeBuilder.<TalNode,DefaultEdge>directed().allowingMultipleEdges(true).allowingSelfLoops(false).edgeClass(DefaultEdge.class).weighted(false).buildGraph();
     }
 
-    public void addVertices(){
+    private void addVertices(){
         NodeList vertices = document.getElementsByTagName("node");
         for (int i = 0; i < vertices.getLength(); i++){
             TalNode vertex;
@@ -112,7 +120,7 @@ public class TalToGraph {
         }
     }
 
-    public void addEdges() {
+    private void addEdges() {
         //NodeList edges = document.getElementsByTagName("connection");
         //System.out.println(edges.toString());
         // for (int i = 0; i < edges.getLength(); i++){
@@ -157,6 +165,11 @@ public class TalToGraph {
             }
         }
     }
+
+    /**
+     * Getter method for the Talend graph.
+     * @return A directed acyclic Talend graph.
+     */
     public Graph<TalNode, DefaultEdge> getGraph(){
         return graph;
     }

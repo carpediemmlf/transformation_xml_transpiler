@@ -332,7 +332,6 @@ public class WriteXMLFile {
             System.out.println(TE.getMessage());
         }
     }
-
 }
 
 

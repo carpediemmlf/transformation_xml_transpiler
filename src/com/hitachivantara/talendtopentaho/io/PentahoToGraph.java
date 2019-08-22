@@ -17,11 +17,18 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * Convert Pentaho .ktr file to graph.
+ */
 public class PentahoToGraph {
 
     private Document document;
     Graph<PentNode, DefaultEdge> graph;
 
+    /**
+     * Constructor that builds a pentaho graph representation from a .ktr file.
+     * @param filename
+     */
     public PentahoToGraph(String filename){
 
         try {
