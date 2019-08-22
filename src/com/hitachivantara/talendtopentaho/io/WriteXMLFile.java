@@ -25,9 +25,19 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * Functionality:
+ *      Takes a graph of PentNodes and produces an XML file. Uses empty transformation ktr as a template and populates with inforamtion stroed in the pentNodes.
+ *      Variable nodes also have templates which, in the case the information they represnt is present within the PentNode, will be filled  and inserted into the original template xml.
+ */
 public class WriteXMLFile {
-
+    /**
+     * Represents graph of pentNodes which is used to construct the XML
+     */
     private Graph<PentNode, DefaultEdge> graph;
+    /**
+     * The XML Document containing the pentaho transformation. Starts as empty template and is built up before used to make XML file
+     */
     private Document translatedDoc;
 
     public WriteXMLFile(Graph<PentNode, DefaultEdge> graph) {
@@ -67,6 +77,10 @@ public class WriteXMLFile {
 
 // Add to working document
 
+    /**
+     * Takes in a pentNode and creates an empty template based on the type of node. Depending on type, it also adds and fills other templates into this step template. Once the information is transferred, this template is inserted into the original transformation template
+     * @param vertex The pentNode corresponds to a step and contains the required information. Used to transfer this information to a corresponding XML Step
+     */
     private void addStep (PentNode vertex){
         try {
             // documentI is insert document
@@ -319,6 +333,12 @@ public class WriteXMLFile {
 
 
     // Turn translatedDoc into xml
+
+    /**
+     * Creates an new instance of a TransformerFactory to create a Transformer. Creates a DOM Source with the completed XML DOM object of the translated pentaho transformation.
+     * A new file is created with the name translated.xml and used as the stream result of a StreamResult Object.
+     * The Transformer transforms the DOM source object into the streamResult by writing the XML to the creayed file.
+     */
     public void writeXML (){
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
